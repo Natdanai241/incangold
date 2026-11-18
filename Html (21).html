@@ -1,0 +1,1651 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#16132e">
+<title>แก๊งแก้มตุ่ย · Cheeky Heist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mali:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#16132e;--ink2:#2a2550;--hud:rgba(27,24,66,.82);--cream:#fff6e6;--edge:#d9c49d;--cheese:#ffc845;--berry:#ff5d73;--mint:#43d1a7;--sky:#7cc6ff;--muted:#aaa5d6;--mutedD:#7a6f95;--line:rgba(255,246,230,.1);--disp:'Mali','IBM Plex Sans Thai',Tahoma,sans-serif}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;overflow:hidden;background:var(--ink);color:var(--cream);font-family:'IBM Plex Sans Thai','Noto Sans Thai',Tahoma,sans-serif;user-select:none;-webkit-user-select:none}
+button{font-family:inherit;cursor:pointer;border:0;outline:0;color:inherit;background:none}
+button:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
+input,select{user-select:text;-webkit-user-select:text}
+b{font-weight:600}
+
+/* ===== night kitchen backdrop ===== */
+#bg{position:fixed;inset:0;z-index:0;overflow:hidden}
+#bg .scene{position:absolute;inset:0;width:100%;height:100%}
+#bg .dim{position:absolute;inset:0;background:radial-gradient(80% 70% at 50% 45%,rgba(22,19,46,.12),rgba(10,8,26,.8))}
+.curL,.curR{transform-box:fill-box;transform-origin:50% 0;animation:cur 7s ease-in-out infinite alternate}
+.curR{animation-delay:-3s}
+@keyframes cur{from{transform:skewX(-1.6deg)}to{transform:skewX(1.6deg)}}
+.pend{transform-box:fill-box;transform-origin:50% 0;animation:pend 1.6s ease-in-out infinite alternate}
+@keyframes pend{from{transform:rotate(-12deg)}to{transform:rotate(12deg)}}
+.tw{animation:tw 3s ease-in-out infinite alternate}.tw:nth-child(2n){animation-delay:-1.4s}
+@keyframes tw{from{opacity:.2}to{opacity:.85}}
+
+/* ===== screens ===== */
+.screen{position:fixed;inset:0;z-index:5;display:none;flex-direction:column}
+.screen.on{display:flex}
+.center{align-items:center;justify-content:center;padding:16px;overflow:auto}
+.paper{background:linear-gradient(180deg,#fffaf0,#f6e8cc);color:var(--ink2);border-radius:28px;padding:22px;position:relative;box-shadow:0 6px 0 var(--edge),0 30px 60px rgba(0,0,0,.5),inset 0 1px 0 #fff}
+.paper h2{font-family:var(--disp);margin:0 0 4px;font-size:24px}
+.hint{font-size:12.5px;color:var(--mutedD)}
+.logo{text-align:center}
+.logo .th{font-family:var(--disp);font-weight:700;font-size:clamp(46px,9vw,80px);line-height:1.05;color:var(--cream);text-shadow:0 3px 0 #f2b02c,0 6px 0 #e08a12,0 9px 0 #b8650f,0 18px 26px rgba(0,0,0,.45)}
+.logo .en{margin-top:14px;font-weight:700;letter-spacing:.42em;font-size:clamp(12px,2.4vw,16px);color:var(--mint);padding-left:.42em}
+.logo .tag{margin-top:6px;color:#d9d4f5;font-size:14px}
+#heroHam{width:150px;height:150px;margin:0 auto -6px;animation:bob 3.2s ease-in-out infinite;filter:drop-shadow(0 14px 12px rgba(0,0,0,.45))}
+#heroHam svg{width:100%;height:100%}
+@keyframes bob{50%{transform:translateY(-7px) rotate(-2deg)}}
+.menuWrap{width:min(560px,94vw);display:flex;flex-direction:column;gap:16px;margin:auto}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.mode{display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:14px;border-radius:20px;text-align:left;background:#fff;color:var(--ink2);box-shadow:0 4px 0 #e5d3ae,0 10px 20px rgba(60,40,10,.12);transition:transform .15s,box-shadow .15s}
+.mode:hover{transform:translateY(-3px);box-shadow:0 7px 0 #e5d3ae,0 16px 26px rgba(60,40,10,.18)}
+.mode:active{transform:translateY(2px);box-shadow:0 2px 0 #e5d3ae}
+.mode .mi{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:24px;box-shadow:inset 0 -3px 0 rgba(0,0,0,.1)}
+.mode b{font-family:var(--disp);font-size:17px}
+.mode small{font-size:12px;color:var(--mutedD);line-height:1.35}
+.mi.c1{background:#ffe7a6}.mi.c2{background:#ffd3db}.mi.c3{background:#c9f3e6}.mi.c4{background:#dcd6ff}
+.menuFoot{display:flex;gap:10px;justify-content:center;margin-top:12px}
+
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:8px 0;padding:13px 16px;border-radius:16px;font-size:16px;font-weight:700;font-family:var(--disp);color:#3a2408;background:linear-gradient(180deg,#ffe08a,#ffc845 50%,#f2a92a);box-shadow:0 5px 0 #c27a12,0 10px 20px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.7);transition:transform .1s,box-shadow .1s}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #c27a12}
+.btn.mint{color:#05392b;background:linear-gradient(180deg,#8ff0d2,#43d1a7 55%,#25b48b);box-shadow:0 5px 0 #157a5e,0 10px 20px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.6)}
+.btn.mint:active{box-shadow:0 2px 0 #157a5e}
+.btn.ghost{color:var(--ink2);background:#fff;box-shadow:0 4px 0 #e2cfa8,0 8px 16px rgba(0,0,0,.06)}
+.btn.ghost:active{box-shadow:0 1px 0 #e2cfa8}
+.btn.danger{color:#fff;background:linear-gradient(180deg,#ff8a9b,#ff5d73 55%,#e23d58);box-shadow:0 5px 0 #a3203a}
+.btn.sm{width:auto;display:inline-flex;padding:9px 14px;font-size:14px;margin:0}
+.btn[disabled]{filter:grayscale(.8);opacity:.55;pointer-events:none}
+input,select{font-family:inherit;font-size:15px;padding:12px 14px;border-radius:14px;width:100%;background:#fff;border:2px solid #ead9b6;color:var(--ink2);outline:0}
+input:focus,select:focus{border-color:#f2a92a}
+label.lbl{display:block;font-size:12.5px;color:var(--mutedD);margin:12px 0 6px;font-weight:600}
+.row{display:flex;gap:8px;align-items:center}
+.scrollArea{overflow:auto;padding-right:4px}
+.scrollArea::-webkit-scrollbar{width:8px}.scrollArea::-webkit-scrollbar-thumb{background:#e2cfa8;border-radius:8px}
+.divider{display:flex;align-items:center;gap:10px;color:var(--mutedD);font-size:12px;margin:8px 0}
+.divider:before,.divider:after{content:"";flex:1;height:2px;background:#ead9b6;border-radius:2px}
+.counter{display:flex;align-items:center;gap:10px;background:#fff;border-radius:18px;padding:6px;box-shadow:inset 0 2px 0 #f1e3c6}
+.counter button{width:44px;height:44px;border-radius:14px;background:#ffe7a6;font-size:24px;font-weight:700;color:#7a4b0c;box-shadow:0 3px 0 #e2b85a}
+.counter button:active{transform:translateY(2px);box-shadow:0 1px 0 #e2b85a}
+.counter .cn{flex:1;text-align:center;font-family:var(--disp);font-size:30px;font-weight:700}
+.seat{display:flex;gap:10px;align-items:center;margin:7px 0;background:#fff;padding:6px 8px;border-radius:16px;box-shadow:0 2px 0 #ecdcbb}
+.seat .sav{width:40px;height:40px;flex:0 0 40px;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 50% 35%,#fff7e6,#f1dfbd);box-shadow:0 0 0 3px var(--pc,#ffc845)}
+.seat .sav svg{width:100%;height:100%;display:block;transform:translateY(6%)}
+.seat input{flex:1;padding:8px 10px;font-size:14px;border-width:1.5px;min-width:0}
+.seat .tog{flex:0 0 auto;padding:8px 10px;border-radius:12px;font-size:12px;font-weight:600;background:#f3ecdc;color:var(--ink2);white-space:nowrap}
+.seat .tog.bot{background:#dcd6ff;color:#3b2f8a}
+.seat .nmL{flex:1;font-weight:600;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.seat .tagL{font-size:11.5px;color:var(--mutedD);white-space:nowrap}
+.ticket{position:relative;margin:10px 0;padding:14px;border-radius:18px;text-align:center;background:linear-gradient(180deg,#2a2566,#1c1848);color:var(--cream);box-shadow:0 4px 0 #0f0d2a}
+.ticket:before,.ticket:after{content:"";position:absolute;top:50%;width:22px;height:22px;margin-top:-11px;border-radius:50%;background:#f8ecd3}
+.ticket:before{left:-11px}.ticket:after{right:-11px}
+.ticket small{display:block;font-size:11px;letter-spacing:.2em;color:var(--muted)}
+#lobbyCode{font-family:var(--disp);font-size:44px;font-weight:700;letter-spacing:.3em;padding-left:.3em;color:var(--cheese)}
+
+/* ===== GAME LAYOUT ===== */
+#screen-game{display:none;height:100%;height:100dvh;grid-template-rows:auto minmax(0,1fr) auto;grid-template-columns:minmax(0,1fr)}
+#screen-game.on{display:grid}
+#gbar{display:flex;align-items:center;gap:8px;padding:8px 12px;padding-top:max(8px,env(safe-area-inset-top));background:linear-gradient(180deg,rgba(16,14,40,.94),rgba(16,14,40,.6));border-bottom:1px solid var(--line);min-width:0;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.brand{display:flex;align-items:center;gap:7px;white-space:nowrap}
+.brand i{width:32px;height:32px;display:block;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 50% 35%,#fff7e6,#f1dfbd)}
+.brand i svg{width:100%;height:100%;transform:translateY(6%)}
+.brand span{font-family:var(--disp);font-weight:700;font-size:17px;color:var(--cheese);line-height:1}
+.brand small{display:block;font-size:9px;letter-spacing:.25em;color:var(--mint);font-weight:700}
+.chip{display:flex;align-items:center;gap:7px;padding:5px 11px;border-radius:999px;font-size:12.5px;white-space:nowrap;background:rgba(255,255,255,.06);border:1px solid var(--line)}
+.chip b{color:var(--cheese);font-weight:700}
+.moons{display:flex;gap:4px}
+.moon{width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1.5px rgba(255,246,230,.25)}
+.moon.done{background:#8c86c4;box-shadow:none}
+.moon.cur{background:#fff1c4;box-shadow:0 0 8px rgba(255,241,196,.55)}
+#roomChip{cursor:pointer}
+#roomBadge{letter-spacing:.2em;color:var(--mint)}
+.ndot{width:8px;height:8px;border-radius:50%;background:var(--mint)}
+.ndot.bad{background:var(--berry);animation:blink 1s infinite}
+@keyframes blink{50%{opacity:.3}}
+.sp{flex:1}
+.ibtn{width:38px;height:38px;flex:0 0 38px;border-radius:12px;display:grid;place-items:center;font-size:16px;background:rgba(255,255,255,.07);border:1px solid var(--line);box-shadow:0 3px 0 rgba(0,0,0,.3);transition:.12s}
+.ibtn:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.3)}
+.ibtn.off{opacity:.4}
+#gmain{min-height:0;min-width:0;display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:12px;padding:10px 12px;overflow:hidden}
+
+#stage{--halo:rgba(255,200,69,.16);position:relative;min-height:0;min-width:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto auto;gap:8px;padding:12px 12px 0;border-radius:26px;overflow:hidden;
+  background-color:#262261;background-image:radial-gradient(60% 55% at 50% 52%,var(--halo),transparent 70%),linear-gradient(rgba(255,255,255,.045) 2px,transparent 2px),linear-gradient(90deg,rgba(255,255,255,.045) 2px,transparent 2px),linear-gradient(180deg,#2d2970,#1d1a4c);
+  background-size:auto,46px 46px,46px 46px,auto;box-shadow:0 18px 40px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.08);border:1px solid var(--line)}
+#stage[data-t="h"]{--halo:rgba(255,93,115,.24)}
+#stage[data-t="r"]{--halo:rgba(67,209,167,.24)}
+#stage[data-t="b"]{--halo:rgba(124,198,255,.12)}
+#stage[data-t="bust"]{--halo:rgba(255,60,80,.5)}
+.stTop{display:flex;gap:10px;align-items:stretch;min-width:0}
+#hazBar{flex:1 1 auto;display:flex;gap:6px;min-width:0}
+.hz{flex:1 1 0;min-width:0;display:flex;align-items:center;gap:7px;padding:5px 8px 5px 5px;border-radius:14px;background:rgba(14,12,36,.55);border:1.5px solid rgba(255,255,255,.06);position:relative;transition:.3s}
+.hz .hi{width:34px;height:34px;flex:0 0 34px;border-radius:10px;background:radial-gradient(circle at 50% 40%,#4a2550,#2a1236);padding:2px}
+.hz .hi svg{width:100%;height:100%;display:block}
+.hzt{min-width:0}
+.hz .hzn{display:block;font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#e2ddfa;line-height:1.2}
+.hz .hzc{display:block;font-size:10px;color:var(--muted)}
+.hz .alert{position:absolute;top:-6px;right:-4px;width:19px;height:19px;border-radius:50%;background:var(--berry);color:#fff;font-size:12px;font-weight:700;display:none;place-items:center;box-shadow:0 2px 0 #a3203a}
+.hz.seen{border-color:var(--berry);background:rgba(120,24,52,.55)}
+.hz.seen .alert{display:grid;animation:pulse 1.4s infinite}
+@keyframes pulse{50%{transform:scale(1.18)}}
+.hz.gone{opacity:.35}
+#gauge{flex:0 0 136px;display:flex;flex-direction:column;align-items:center;padding:4px 8px 6px;border-radius:14px;background:rgba(14,12,36,.55);border:1.5px solid rgba(255,255,255,.06)}
+#gauge svg{width:100%;height:auto;max-height:50px}
+#needle{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(-90deg);transition:transform .8s cubic-bezier(.3,1.5,.5,1)}
+.gl{display:flex;gap:6px;align-items:baseline;font-size:10.5px;color:var(--muted)}
+.gl b{font-size:14px;color:var(--cream)}
+.stMid{min-height:0;display:grid;grid-template-columns:auto auto;grid-template-rows:minmax(0,1fr);justify-content:center;align-items:center;gap:clamp(12px,3vw,30px)}
+#cardSlot{height:100%;min-height:0;display:flex;align-items:center;justify-content:center;position:relative;padding:4px 0 16px}
+#cardSlot:after{content:"";position:absolute;bottom:2px;left:50%;width:72%;height:16px;transform:translateX(-50%);background:radial-gradient(ellipse,rgba(0,0,0,.5),transparent 70%)}
+#bigCard{height:100%;max-height:340px;aspect-ratio:5/7;max-width:44vw;position:relative;z-index:1}
+.card{width:100%;height:100%;border-radius:20px;padding:7px;position:relative;box-shadow:0 5px 0 var(--ed),0 22px 36px rgba(0,0,0,.5)}
+.card:after{content:"";position:absolute;inset:7px;border-radius:14px;background:linear-gradient(135deg,rgba(255,255,255,.35),transparent 38%);pointer-events:none}
+.cin{height:100%;border-radius:14px;display:grid;grid-template-rows:auto minmax(0,1fr) auto;padding:8px;gap:4px;overflow:hidden}
+.ctop{font-family:var(--disp);text-align:center;font-weight:700;font-size:clamp(11px,1.9vh,16px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cart{min-height:0}.cart svg{width:100%;height:100%;display:block}
+.cval{justify-self:center;display:flex;gap:5px;align-items:center;padding:2px 14px;border-radius:999px;font-family:var(--disp);font-weight:700;font-size:clamp(13px,2.4vh,20px);background:#fff;color:#3a2a10;box-shadow:0 2px 0 rgba(0,0,0,.15)}
+.cval .sico{width:1em;height:1em}
+.k-loot{--ed:#b86f17;background:linear-gradient(160deg,#ffe08a,#f2a93a)}
+.k-loot .cin{background:radial-gradient(circle at 50% 40%,#fffaf0,#fbe9c4)}.k-loot .ctop{color:#8a4f0b}
+.k-haz{--ed:#7e1a35;background:linear-gradient(160deg,#ff7b93,#c42f52)}
+.k-haz .cin{background:radial-gradient(circle at 50% 40%,#4a2550,#2a1236)}.k-haz .ctop{color:#ffd0d8}
+.k-haz .cval{background:var(--berry);color:#fff}
+.k-relic{--ed:#0e6a51;background:linear-gradient(160deg,#7af0d0,#1fae86)}
+.k-relic .cin{background:radial-gradient(circle at 50% 40%,#f2fffa,#c9f3e6)}.k-relic .ctop{color:#0e6a51}
+.k-back{--ed:#16133a;background:linear-gradient(160deg,#4b44a6,#2a2566)}
+.k-back .cin{background:radial-gradient(circle at 50% 45%,#3a3488,#201c52);border:2px dashed rgba(255,246,230,.2)}.k-back .ctop{color:var(--cheese)}
+.k-back .cval{background:rgba(255,255,255,.1);color:var(--cream)}
+@keyframes dealIn{0%{transform:rotateY(90deg) translateY(-20px) scale(.75);opacity:0}60%{transform:rotateY(-10deg) scale(1.05);opacity:1}100%{transform:none}}
+#bigCard.deal{animation:dealIn .6s cubic-bezier(.2,.9,.25,1)}
+#bigCard.bust{animation:dealIn .45s cubic-bezier(.2,.9,.25,1),shakeC .4s 3 .45s}
+@keyframes shakeC{0%,100%{transform:none}25%{transform:translate(-8px,3px) rotate(-4deg)}75%{transform:translate(8px,-3px) rotate(4deg)}}
+.tiles{display:flex;flex-direction:column;gap:9px;min-width:0}
+.tile{display:flex;align-items:center;gap:10px;padding:8px 14px 8px 8px;border-radius:16px;background:linear-gradient(180deg,#fffaf0,#f3e3c7);color:var(--ink2);box-shadow:0 4px 0 var(--edge),0 10px 18px rgba(0,0,0,.25);min-width:156px}
+.tile .ti{width:38px;height:38px;flex:0 0 38px;border-radius:12px;display:grid;place-items:center;background:#fff;box-shadow:inset 0 -2px 0 #ecdcbb;overflow:hidden}
+.tile .ti svg{width:26px;height:26px}
+.tile .k{font-size:11px;color:var(--mutedD);white-space:nowrap}
+.tile .v{font-family:var(--disp);font-size:24px;font-weight:700;line-height:1.05}
+.tile .v.sm{font-size:18px}
+#stageMsg{justify-self:center;max-width:96%;padding:7px 18px;border-radius:16px;font-size:13.5px;text-align:center;background:var(--cream);color:var(--ink2);font-weight:500;box-shadow:0 3px 0 var(--edge);line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#stageMsg:empty{visibility:hidden}
+#pathWrap{margin:0 -12px;padding:10px 12px;background:repeating-linear-gradient(90deg,rgba(0,0,0,.05) 0 2px,transparent 2px 11px),linear-gradient(180deg,#d9995c,#bb7c45 55%,#985d31);box-shadow:inset 0 4px 0 #f0b878,inset 0 -6px 12px rgba(0,0,0,.25)}
+#pathStrip{display:flex;gap:7px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;min-height:64px;align-items:flex-end;padding-top:6px}
+#pathStrip::-webkit-scrollbar{display:none}
+#pathStrip:empty:before{content:"เส้นทางบุกจะเรียงอยู่บนเคาน์เตอร์นี้";color:rgba(70,35,10,.55);font-size:12px;align-self:center}
+.mini{flex:0 0 auto;width:44px;height:60px;border-radius:10px;padding:3px;position:relative;box-shadow:0 3px 0 rgba(0,0,0,.25),0 6px 10px rgba(0,0,0,.25);animation:pop .45s cubic-bezier(.3,1.5,.5,1)}
+.mini .mi2{width:100%;height:100%;border-radius:7px;overflow:hidden}
+.mini svg{width:100%;height:100%;display:block}
+.mini.k-loot{background:#ffc845}.mini.k-loot .mi2{background:#fff6e2}
+.mini.k-haz{background:#ff5d73}.mini.k-haz .mi2{background:#3a1a44}
+.mini.k-relic{background:#43d1a7}.mini.k-relic .mi2{background:#e6fbf4}
+.mini .ml{position:absolute;right:-6px;top:-7px;min-width:20px;height:20px;border-radius:10px;padding:0 5px;font-size:11px;font-weight:700;display:grid;place-items:center;background:var(--ink2);color:var(--cheese);box-shadow:0 2px 0 rgba(0,0,0,.3)}
+.mini.empty .ml{display:none}
+.mini.claimed{filter:grayscale(.9) brightness(.7)}
+@keyframes pop{from{transform:translateY(16px) scale(.4);opacity:0}to{transform:none;opacity:1}}
+
+#crew{min-height:0;min-width:0;display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:26px;background:var(--hud);border:1px solid var(--line);box-shadow:0 18px 40px rgba(0,0,0,.4);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.chead{display:flex;justify-content:space-between;align-items:baseline;padding:0 4px}
+.chead b{font-family:var(--disp);font-size:16px}
+.chead span{font-size:10.5px;color:var(--muted)}
+#plist{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:7px}
+.pp{--pc:#ffc845;flex:1 1 0;min-height:0;max-height:90px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px;padding:6px 10px 6px 7px;border-radius:18px;background:rgba(255,255,255,.045);border:1.5px solid transparent;transition:background .3s,border-color .3s,opacity .3s;overflow:hidden}
+.pp .av{width:46px;height:46px;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 50% 35%,#fff7e6,#f1dfbd);box-shadow:0 0 0 3px var(--pc),0 4px 10px rgba(0,0,0,.35)}
+.pp .av svg{width:100%;height:100%;display:block;transform:translateY(6%)}
+.pp.in{background:rgba(255,255,255,.08)}
+.pp.out{background:rgba(67,209,167,.1)}
+.pp.dead{background:rgba(255,93,115,.13)}
+.pp.me{border-color:rgba(255,200,69,.75)}
+.pp.off{opacity:.5}
+.pp .nm{min-width:0}
+.pp .n1{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pp .n2{display:flex;align-items:center;gap:6px;margin-top:3px;min-width:0}
+.pst{flex:0 0 auto;font-size:10px;padding:2px 8px;border-radius:999px;font-weight:600;white-space:nowrap}
+.pst.in{background:rgba(255,200,69,.18);color:#ffd977}
+.pst.thinking{background:rgba(124,198,255,.18);color:#a9dcff}
+.pst.thinking:after{content:"";display:inline-block;width:5px;height:5px;margin-left:5px;border-radius:50%;background:currentColor;animation:blink 1s infinite;vertical-align:middle}
+.pst.locked{background:rgba(67,209,167,.24);color:#8ff0d2}
+.pst.camp{background:rgba(67,209,167,.14);color:#8ff0d2}
+.pst.lost{background:rgba(255,93,115,.22);color:#ffb0bd}
+.pp .sub{font-size:10.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sts{display:flex;gap:4px}
+.st{min-width:42px;text-align:center;border-radius:12px;padding:3px 5px;background:rgba(10,8,28,.45)}
+.st i{display:block;font-style:normal;font-size:9px;color:var(--muted)}
+.st b{display:block;font-family:var(--disp);font-size:16px;line-height:1.15;color:var(--cheese)}
+.st.tent b{color:var(--mint)}.st.rel b{color:var(--sky)}
+.bump{animation:bump .5s}
+@keyframes bump{40%{transform:scale(1.22)}}
+#crew.c6 .pp .av{width:38px;height:38px}
+#crew.c7 .pp,#crew.c8 .pp{padding:3px 8px 3px 5px;gap:8px;border-radius:15px}
+#crew.c7 .pp .av,#crew.c8 .pp .av{width:32px;height:32px;box-shadow:0 0 0 2px var(--pc)}
+#crew.c7 .n1,#crew.c8 .n1{font-size:13px}
+#crew.c7 .st,#crew.c8 .st{min-width:36px;padding:2px 4px}
+#crew.c7 .st b,#crew.c8 .st b{font-size:14px}
+
+#controls{display:flex;flex-direction:column;gap:6px;padding:8px 12px;padding-bottom:max(10px,env(safe-area-inset-bottom));background:linear-gradient(0deg,rgba(12,10,32,.97),rgba(16,14,40,.72));border-top:1px solid var(--line);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+#statusMsg{text-align:center;font-size:12.5px;color:#d9d4f5;min-height:18px;line-height:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#ctlRow{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:12px;align-items:center;max-width:920px;width:100%;margin:0 auto}
+.act{min-width:0;display:flex;align-items:center;gap:12px;padding:10px 16px;border-radius:22px;text-align:left;position:relative;overflow:hidden;transition:transform .12s,filter .25s,box-shadow .2s}
+.act .ic{flex:0 0 46px;height:46px;border-radius:15px;display:grid;place-items:center;background:rgba(255,255,255,.4);box-shadow:inset 0 -3px 0 rgba(0,0,0,.1)}
+.act .ic svg{width:30px;height:30px}
+.act .tx{min-width:0}
+.act .tx b{display:block;font-family:var(--disp);font-size:19px;font-weight:700;line-height:1.15}
+.act .tx small{display:block;font-size:11.5px;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.act.explore{color:#3a2408;background:linear-gradient(180deg,#ffe08a,#ffc845 50%,#f2a92a);box-shadow:0 6px 0 #c27a12,0 14px 24px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.7)}
+.act.camp{color:#05392b;background:linear-gradient(180deg,#8ff0d2,#43d1a7 55%,#25b48b);box-shadow:0 6px 0 #157a5e,0 14px 24px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.6)}
+.act.explore:active{transform:translateY(4px);box-shadow:0 2px 0 #c27a12}
+.act.camp:active{transform:translateY(4px);box-shadow:0 2px 0 #157a5e}
+.act[disabled]{pointer-events:none;filter:grayscale(.85) brightness(.5);transform:translateY(4px);box-shadow:0 2px 0 rgba(0,0,0,.4)}
+.act[disabled].chosen{filter:none;box-shadow:0 2px 0 rgba(0,0,0,.35),0 0 0 3px var(--cream)}
+.act.ready:after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%);transform:translateX(-100%);animation:shine 2.6s infinite;pointer-events:none}
+@keyframes shine{60%,100%{transform:translateX(100%)}}
+#mySum{display:flex;align-items:center;gap:10px;padding:6px 16px 6px 6px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid var(--line)}
+#mySum.hide{visibility:hidden}
+#myAv{width:42px;height:42px;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 50% 35%,#fff7e6,#f1dfbd);box-shadow:0 0 0 2px var(--cheese)}
+#myAv svg{width:100%;height:100%;transform:translateY(6%)}
+.msk{font-size:10px;color:var(--muted)}
+.msv{display:flex;gap:12px;font-size:12px;white-space:nowrap}
+.msv b{font-family:var(--disp);font-size:17px;color:var(--cheese)}
+.msv .n b{color:var(--mint)}
+
+/* overlays */
+.ov{position:fixed;inset:0;z-index:40;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(10,8,26,.74);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+.ov.on{display:flex;animation:fade .2s}
+@keyframes fade{from{opacity:0}}
+.ov .paper{animation:rise .3s cubic-bezier(.3,1.4,.5,1)}
+@keyframes rise{from{transform:translateY(24px) scale(.96);opacity:0}}
+#decTitle{text-align:center;font-family:var(--disp);font-size:clamp(24px,5vw,36px);font-weight:700;color:var(--cream);margin-bottom:18px;text-shadow:0 3px 0 #b8650f,0 10px 20px rgba(0,0,0,.4)}
+#decGrid{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;max-width:900px;margin:0 auto}
+.dflip{width:120px;height:150px;perspective:900px}
+.dinner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.3,1.35,.5,1)}
+.dflip.show .dinner{transform:rotateY(180deg)}
+.dface{position:absolute;inset:0;border-radius:20px;-webkit-backface-visibility:hidden;backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px;text-align:center}
+.dback{background:linear-gradient(180deg,#3a3488,#211d55);color:var(--cream);box-shadow:0 5px 0 #120f33,0 14px 24px rgba(0,0,0,.4)}
+.dback .dq{font-family:var(--disp);font-size:46px;color:var(--cheese);line-height:1}
+.dfront{transform:rotateY(180deg)}
+.dfront.go{background:linear-gradient(180deg,#ffe08a,#f2a92a);color:#3a2408;box-shadow:0 5px 0 #c27a12,0 14px 24px rgba(0,0,0,.4)}
+.dfront.camp{background:linear-gradient(180deg,#8ff0d2,#25b48b);color:#05392b;box-shadow:0 5px 0 #157a5e,0 14px 24px rgba(0,0,0,.4)}
+.dav{width:64px;height:64px}.dav svg{width:100%;height:100%}
+.dn{font-weight:600;font-size:13px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dd{font-family:var(--disp);font-size:15px;font-weight:700}
+#ovPass .paper{width:min(400px,94vw);text-align:center}
+#passStep1,#passStep2{display:flex;flex-direction:column;align-items:center;gap:4px}
+#passAv{width:96px;height:96px}#passAv svg{width:100%;height:100%}
+#passName{font-family:var(--disp);font-size:30px;font-weight:700}
+.swRow{display:flex;align-items:center;justify-content:space-between;padding:12px 4px;border-bottom:2px dashed #ead9b6;font-weight:600}
+.sw{width:56px;height:32px;border-radius:999px;background:#e2d6be;position:relative;transition:.2s;flex:0 0 56px}
+.sw:after{content:"";position:absolute;top:4px;left:4px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.25);transition:.2s}
+.sw.on{background:var(--mint)}.sw.on:after{left:28px}
+
+/* fx */
+#fxLayer{position:fixed;inset:0;z-index:35;pointer-events:none;overflow:hidden}
+.seedfx{position:fixed;width:20px;height:20px;margin:-10px 0 0 -10px;filter:drop-shadow(0 0 2px rgba(255,255,255,.7));animation:burst 1.1s cubic-bezier(.2,.7,.4,1) forwards}
+.seedfx svg{width:100%;height:100%}
+@keyframes burst{to{transform:translate(var(--dx),var(--dy)) rotate(var(--rr));opacity:0}}
+.conf{position:absolute;top:-24px;width:9px;height:15px;border-radius:3px}
+@keyframes fall{to{transform:translateY(112vh) rotate(720deg)}}
+.flash{position:fixed;inset:0;z-index:34;pointer-events:none;background:radial-gradient(circle,rgba(255,70,90,.55),rgba(80,0,20,.15) 70%);animation:fl .7s forwards}
+@keyframes fl{from{opacity:1}to{opacity:0}}
+body.shake #screen-game{animation:bsh .45s 3}
+@keyframes bsh{0%,100%{transform:none}20%{transform:translate(-8px,5px)}60%{transform:translate(9px,-4px)}}
+.goldPop{position:fixed;z-index:36;font-family:var(--disp);font-weight:700;color:var(--cheese);text-shadow:0 2px 0 #7a4b0c,0 4px 10px #000;pointer-events:none;animation:gp 1.2s forwards;font-size:17px;white-space:nowrap}
+@keyframes gp{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-48px)}}
+#banner{position:fixed;left:0;right:0;top:32%;z-index:38;text-align:center;pointer-events:none;display:none}
+#banner.on{display:block;animation:bn 2.3s forwards}
+#banner span{display:inline-block;padding:12px 30px;border-radius:22px;font-family:var(--disp);font-size:clamp(24px,5.5vw,44px);font-weight:700;background:linear-gradient(180deg,#fffaf0,#f6e8cc);color:var(--ink2);box-shadow:0 6px 0 var(--edge),0 20px 50px rgba(0,0,0,.55)}
+#banner.bad span{background:linear-gradient(180deg,#ff8a9b,#e23d58);color:#fff;box-shadow:0 6px 0 #8a1830,0 20px 50px rgba(0,0,0,.55)}
+@keyframes bn{0%{opacity:0;transform:scale(.6)}15%{opacity:1;transform:scale(1.07)}80%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.95)}}
+
+/* results */
+#podium{display:grid;grid-template-columns:1fr 1.15fr 1fr;align-items:end;gap:8px;margin:12px 0 4px}
+.pod{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}
+.pod .pav{width:72px;height:72px}.pod.p1 .pav{width:96px;height:96px}
+.pod .pav svg{width:100%;height:100%}
+.pod .pn{font-weight:600;font-size:13px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pod .pt{font-family:var(--disp);font-weight:700;color:#c27a12;font-size:15px}
+.pod .blk{width:100%;margin-top:4px;border-radius:14px 14px 6px 6px;display:grid;place-items:center;font-family:var(--disp);font-size:26px;font-weight:700;color:#fff;box-shadow:inset 0 -5px 0 rgba(0,0,0,.15);text-shadow:0 2px 0 rgba(0,0,0,.2)}
+.p1 .blk{height:84px;background:linear-gradient(180deg,#ffd45c,#f2a92a)}
+.p2 .blk{height:60px;background:linear-gradient(180deg,#c9d3e6,#93a0bb)}
+.p3 .blk{height:44px;background:linear-gradient(180deg,#f2b98a,#c77d47)}
+.pod.empty{visibility:hidden}
+#winnerLine{text-align:center;font-family:var(--disp);font-size:18px;font-weight:700;margin-top:4px}
+#resTable{width:100%;border-collapse:collapse;font-size:14px}
+#resTable th{font-size:11px;color:var(--mutedD);font-weight:600;padding:6px;text-align:center}
+#resTable td{padding:8px 6px;text-align:center;border-top:2px dashed #ead9b6}
+#resTable td.nm{text-align:left;font-weight:600}
+#resTable tr.win td{background:rgba(255,200,69,.22)}
+#resTable td b{font-family:var(--disp);color:#c27a12;font-size:16px}
+
+#errPanel{position:fixed;left:8px;right:8px;bottom:8px;z-index:9999;display:none;padding:10px 34px 10px 12px;border-radius:12px;background:#b0102a;color:#fff;font-size:12px;border:2px solid #ff6a7d;box-shadow:0 10px 30px rgba(0,0,0,.6);max-height:28vh;overflow:auto}
+#errPanel b{display:block;margin-bottom:3px}
+#errClose{position:absolute;right:8px;top:6px;font-size:16px}
+.rulesBody{font-size:13.5px;line-height:1.7;color:#3f3962}
+.rulesBody h3{font-family:var(--disp);color:var(--ink2);font-size:16px;margin:14px 0 4px}
+.rulesBody ul{margin:4px 0;padding-left:20px}.rulesBody li{margin:3px 0}
+.tag{display:inline-block;background:#ffe7a6;border-radius:8px;padding:0 7px;font-size:12px;font-weight:600;color:#7a4b0c}
+
+@media (max-width:520px){ .modes{grid-template-columns:1fr} #heroHam{width:120px;height:120px} }
+@media (max-width:820px){
+  .brand span,.brand small,.chip .k{display:none}
+  #gbar{gap:6px;padding:6px 8px;padding-top:max(6px,env(safe-area-inset-top))}
+  .chip{padding:4px 9px;font-size:11.5px}
+  .ibtn{width:34px;height:34px;flex:0 0 34px;font-size:14px}
+  #gmain{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;gap:8px;padding:8px}
+  #stage{border-radius:20px;padding:8px 8px 0;gap:6px}
+  #pathWrap{margin:0 -8px;padding:7px 8px 8px}
+  .hz{padding:4px;justify-content:center}.hzt{display:none}
+  .hz .hi{width:28px;height:28px;flex-basis:28px}
+  #gauge{flex:0 0 92px;padding:3px 6px 4px}.gl span{display:none}
+  .tile{min-width:0;padding:6px 10px 6px 6px;gap:7px;border-radius:13px}
+  .tile .ti{width:28px;height:28px;flex-basis:28px}.tile .ti svg{width:19px;height:19px}
+  .tile .k{font-size:9.5px}.tile .v{font-size:18px}.tile .v.sm{font-size:15px}
+  #bigCard{max-width:50vw}
+  #stageMsg{font-size:12px;padding:5px 12px}
+  #pathStrip{min-height:50px}.mini{width:34px;height:47px;border-radius:8px}
+  #crew{padding:8px;border-radius:20px;gap:6px}.chead{display:none}
+  #plist{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .pp,#crew.c7 .pp,#crew.c8 .pp{max-height:none;padding:4px 7px 4px 4px;gap:7px;border-radius:14px}
+  .pp .av,#crew.c6 .pp .av,#crew.c7 .pp .av,#crew.c8 .pp .av{width:30px;height:30px;box-shadow:0 0 0 2px var(--pc)}
+  .pp .n1,#crew.c7 .n1,#crew.c8 .n1{font-size:12.5px}
+  .pp .sub{display:none}.pst{font-size:9px;padding:1px 6px}
+  .st,#crew.c7 .st,#crew.c8 .st{min-width:30px;padding:2px 3px;border-radius:9px}
+  .st i{display:none}.st b,#crew.c7 .st b,#crew.c8 .st b{font-size:13px}
+  .st.rel{display:none}.st.rel.has{display:block}
+  #controls{padding:6px 8px;padding-bottom:max(8px,env(safe-area-inset-bottom))}
+  #ctlRow{grid-template-columns:1fr 1fr;gap:8px}#mySum{display:none}
+  .act{padding:8px 10px;gap:8px;border-radius:18px}
+  .act .ic{flex:0 0 36px;height:36px;border-radius:12px}.act .ic svg{width:24px;height:24px}
+  .act .tx b{font-size:16px}.act .tx small{font-size:10px}
+  .dflip{width:100px;height:128px}.dav{width:52px;height:52px}
+}
+@media (max-width:380px){ .act .tx small,.tile .k{display:none} }
+@media (max-height:640px) and (min-width:821px){
+  .pp .sub,.st i{display:none}
+  .pp .av,#crew.c6 .pp .av{width:32px;height:32px}
+  .act .tx small{display:none}.act{padding:7px 14px}.act .ic{flex-basis:36px;height:36px}
+  #pathStrip{min-height:46px}.mini{width:32px;height:44px}
+  .tile .v{font-size:19px}.hz .hzc{display:none}
+}
+@media (prefers-reduced-motion:reduce){ .curL,.curR,.pend,.tw,#heroHam,.act.ready:after{animation:none} }
+</style>
+</head>
+<body>
+
+<div id="bg">
+  <svg class="scene" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="gWall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c276a"/><stop offset="1" stop-color="#17143a"/></linearGradient>
+      <linearGradient id="gGlass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#18245e"/><stop offset="1" stop-color="#3a4d9c"/></linearGradient>
+      <linearGradient id="gWood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a5530"/><stop offset="1" stop-color="#3f2515"/></linearGradient>
+      <pattern id="pStripe" width="44" height="44" patternUnits="userSpaceOnUse"><rect width="22" height="44" fill="rgba(255,255,255,.025)"/></pattern>
+    </defs>
+    <rect width="1200" height="800" fill="url(#gWall)"/>
+    <rect width="1200" height="800" fill="url(#pStripe)"/>
+    <g transform="translate(810 70)">
+      <rect x="-16" y="-16" width="312" height="342" rx="14" fill="#3d3780"/>
+      <rect width="280" height="310" rx="6" fill="url(#gGlass)"/>
+      <g fill="#fff6e6"><circle class="tw" cx="40" cy="50" r="1.8"/><circle class="tw" cx="96" cy="30" r="1.4"/><circle class="tw" cx="70" cy="110" r="1.6"/><circle class="tw" cx="240" cy="200" r="1.5"/><circle class="tw" cx="30" cy="190" r="1.3"/><circle class="tw" cx="250" cy="40" r="1.7"/></g>
+      <circle cx="190" cy="92" r="38" fill="#fff1c4"/><circle cx="176" cy="82" r="7" fill="#eedb9f"/><circle cx="203" cy="106" r="5" fill="#eedb9f"/><circle cx="198" cy="76" r="3.5" fill="#eedb9f"/>
+      <path d="M0 250 Q40 214 80 236 Q130 196 170 232 Q220 206 280 228 V310 H0Z" fill="#121838"/>
+      <rect x="137" y="0" width="6" height="310" fill="#3d3780"/><rect x="0" y="152" width="280" height="6" fill="#3d3780"/>
+      <rect x="-26" y="318" width="332" height="16" rx="5" fill="#4a438f"/>
+      <g transform="translate(40 268)"><path d="M-14 0 h28 l-4 50 h-20z" fill="#c4704a"/><path d="M0 0 C-20 -26 -30 -10 -24 -2 M0 0 C14 -34 30 -18 22 -4 M0 0 C-2 -40 8 -44 6 -10" stroke="#3f8a5c" stroke-width="6" fill="none" stroke-linecap="round"/></g>
+      <path class="curL" d="M-34 -24 H46 Q34 120 56 336 H-34Z" fill="#9b3f63"/>
+      <path class="curR" d="M234 -24 H314 V336 H224 Q246 120 234 -24Z" fill="#9b3f63"/>
+      <rect x="-40" y="-34" width="360" height="14" rx="7" fill="#6b4a3a"/>
+    </g>
+    <g transform="translate(90 200)">
+      <rect x="0" y="110" width="420" height="14" rx="4" fill="#7a4e33"/>
+      <rect x="20" y="40" width="70" height="70" rx="14" fill="#3b367a"/><rect x="26" y="30" width="58" height="12" rx="4" fill="#5a52a8"/><rect x="34" y="62" width="42" height="20" rx="4" fill="#fff6e6" opacity=".22"/>
+      <rect x="110" y="20" width="56" height="90" rx="14" fill="#352f70"/><rect x="116" y="10" width="44" height="12" rx="4" fill="#5a52a8"/>
+      <rect x="186" y="52" width="80" height="58" rx="14" fill="#3b367a"/><rect x="192" y="42" width="68" height="12" rx="4" fill="#5a52a8"/><rect x="200" y="70" width="52" height="18" rx="4" fill="#fff6e6" opacity=".22"/>
+      <rect x="290" y="30" width="44" height="80" rx="12" fill="#352f70"/><rect x="296" y="22" width="32" height="10" rx="3" fill="#5a52a8"/>
+      <rect x="350" y="60" width="54" height="50" rx="12" fill="#3b367a"/>
+    </g>
+    <g transform="translate(640 140)">
+      <g class="pend"><line x1="0" y1="50" x2="0" y2="150" stroke="#b8923e" stroke-width="3"/><circle cx="0" cy="158" r="13" fill="#e7b84a"/></g>
+      <circle r="54" fill="#4a438f"/><circle r="45" fill="#f3e3c7"/>
+      <g stroke="#2a2566" stroke-width="3" stroke-linecap="round"><path d="M0 -38v6M0 38v-6M-38 0h6M38 0h-6"/></g>
+      <path d="M0 0 L-3 -30" stroke="#2a2566" stroke-width="4" stroke-linecap="round"/><path d="M0 0 L0 -22" stroke="#ff5d73" stroke-width="5" stroke-linecap="round"/><circle r="4" fill="#2a2566"/>
+    </g>
+    <rect x="0" y="650" width="1200" height="150" fill="url(#gWood)"/>
+    <rect x="0" y="638" width="1200" height="18" fill="#b97a45"/>
+    <g fill="none" stroke="rgba(0,0,0,.25)" stroke-width="3"><rect x="40" y="676" width="250" height="140" rx="10"/><rect x="320" y="676" width="250" height="140" rx="10"/><rect x="600" y="676" width="250" height="140" rx="10"/><rect x="880" y="676" width="250" height="140" rx="10"/></g>
+  </svg>
+  <div class="dim"></div>
+</div>
+
+<!-- MENU -->
+<div class="screen center on" id="screen-menu">
+  <div class="menuWrap">
+    <div class="logo">
+      <div id="heroHam"></div>
+      <div class="th">แก๊งแก้มตุ่ย</div>
+      <div class="en">CHEEKY HEIST</div>
+      <div class="tag">ปฏิบัติการบุกครัวตอนเที่ยงคืน · 3–8 ผู้เล่น</div>
+    </div>
+    <div class="paper">
+      <div class="modes">
+        <button class="mode" id="mSolo"><span class="mi c1">🐹</span><b>เล่นคนเดียว</b><small>บุกครัวกับบอทแฮมสเตอร์หลากนิสัย</small></button>
+        <button class="mode" id="mLocal"><span class="mi c2">👥</span><b>เล่นเครื่องเดียว</b><small>ผลัดกันส่งเครื่อง ตัดสินใจอย่างลับ ๆ</small></button>
+        <button class="mode" id="mOnline"><span class="mi c3">🌐</span><b>เล่นออนไลน์</b><small>เชื่อมต่อตรงกับเพื่อนด้วยรหัส 5 ตัว</small></button>
+        <button class="mode" id="mRules"><span class="mi c4">📖</span><b>วิธีเล่น</b><small>อ่านแผนก่อนย่องเข้าครัว</small></button>
+      </div>
+      <div class="menuFoot"><button class="btn ghost sm" id="mSettings">⚙ ตั้งค่าเสียง</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- SETUP -->
+<div class="screen center" id="screen-setup">
+  <div class="menuWrap paper">
+    <h2 id="setupTitle">ตั้งค่าแก๊ง</h2>
+    <div class="hint">เลือกสมาชิกแก๊ง 3–8 ตัว</div>
+    <label class="lbl">จำนวนสมาชิก</label>
+    <div class="counter"><button id="pMinus">−</button><div class="cn" id="pCount">4</div><button id="pPlus">+</button></div>
+    <label class="lbl">จำนวนคืนที่บุก</label>
+    <select id="selRounds"><option value="5">5 คืน (มาตรฐาน)</option><option value="3">3 คืน (เล่นสั้น)</option></select>
+    <label class="lbl">สมาชิกแก๊ง</label>
+    <div class="scrollArea" style="max-height:32vh" id="seatList"></div>
+    <button class="btn" id="startLocal" style="margin-top:14px">เริ่มบุกครัว!</button>
+    <button class="btn ghost" id="backMenu1">ย้อนกลับ</button>
+  </div>
+</div>
+
+<!-- ONLINE -->
+<div class="screen center" id="screen-online">
+  <div class="menuWrap paper">
+    <div id="onlHome">
+      <h2>เล่นออนไลน์</h2>
+      <div class="hint">เชื่อมต่อแบบตรงระหว่างอุปกรณ์ เครื่องหัวหน้าห้องเป็นผู้คุมเกม</div>
+      <label class="lbl">ชื่อแฮมสเตอร์ของคุณ</label>
+      <input id="onName" maxlength="12" placeholder="เช่น ถั่วเขียว">
+      <button class="btn" id="btnCreate" style="margin-top:14px">สร้างห้องใหม่</button>
+      <div class="divider">หรือ</div>
+      <label class="lbl">รหัสห้อง 5 ตัว</label>
+      <input id="onCode" maxlength="5" placeholder="XXXXX" style="letter-spacing:.5em;text-align:center;text-transform:uppercase;font-weight:700">
+      <button class="btn mint" id="btnJoin" style="margin-top:10px">เข้าร่วม / กลับเข้าที่นั่งเดิม</button>
+      <button class="btn ghost" id="backMenu2">ย้อนกลับ</button>
+      <div id="onMsg" style="text-align:center;font-size:12.5px;color:#d0304d;margin-top:6px;min-height:18px"></div>
+    </div>
+    <div id="onlLobby" style="display:none">
+      <h2>ห้องรวมพล</h2>
+      <div class="ticket"><small>รหัสห้อง</small><div id="lobbyCode">-----</div></div>
+      <div class="row" style="justify-content:center;gap:8px;margin-bottom:6px">
+        <button class="btn ghost sm" id="btnCopyCode">คัดลอกรหัส</button>
+        <button class="btn ghost sm" id="btnCopyLink">คัดลอกลิงก์เชิญ</button>
+      </div>
+      <div class="hint">สมาชิกในห้อง (<span id="lobbyCount">0</span>/8)</div>
+      <div class="scrollArea" style="max-height:28vh" id="lobbyList"></div>
+      <div id="hostOnly" style="display:none">
+        <div class="row" style="gap:8px;margin-top:8px">
+          <button class="btn ghost sm" id="btnAddBot" style="flex:1">+ เพิ่มบอท</button>
+          <button class="btn ghost sm" id="btnDelBot" style="flex:1">− ลบบอท</button>
+        </div>
+        <label class="lbl">จำนวนคืนที่บุก</label>
+        <select id="selRounds2"><option value="5">5 คืน (มาตรฐาน)</option><option value="3">3 คืน (เล่นสั้น)</option></select>
+        <button class="btn" id="btnStartOnline" style="margin-top:12px">เริ่มเกม (อย่างน้อย 3 ตัว)</button>
+      </div>
+      <div id="guestWait" style="display:none;text-align:center;color:var(--mutedD);font-size:13px;margin-top:10px">รอหัวหน้าห้องเริ่มเกม…</div>
+      <div id="lobbyMsg" style="text-align:center;font-size:12.5px;color:#157a5e;min-height:18px;margin-top:6px"></div>
+      <button class="btn ghost" id="btnLeaveRoom">ออกจากห้อง</button>
+    </div>
+  </div>
+</div>
+
+<!-- GAME -->
+<div class="screen" id="screen-game">
+  <header id="gbar">
+    <div class="brand"><i id="brandAv"></i><div><span>แก๊งแก้มตุ่ย</span><small>CHEEKY HEIST</small></div></div>
+    <div class="chip"><span class="k">คืนที่</span><b id="roundLabel">1/5</b><div class="moons" id="roundPips"></div></div>
+    <div class="chip"><span class="k">การ์ดเหลือ</span><b id="deckLeft">0</b></div>
+    <div class="chip" id="roomChip" style="display:none" title="แตะเพื่อคัดลอกลิงก์เชิญ"><span class="ndot" id="netDot"></span><b id="roomBadge">-----</b></div>
+    <div class="sp"></div>
+    <button class="ibtn" id="btnMusic" title="เพลง">♪</button>
+    <button class="ibtn" id="btnSfx" title="เสียงประกอบ">🔊</button>
+    <button class="ibtn" id="btnGear" title="ตั้งค่า">⚙</button>
+  </header>
+
+  <main id="gmain">
+    <section id="stage" data-t="b">
+      <div class="stTop">
+        <div id="hazBar"></div>
+        <div id="gauge" title="คำนวณจากข้อมูลที่ทุกคนเห็นเท่านั้น">
+          <svg viewBox="0 0 120 66">
+            <path d="M20 60 A40 40 0 0 1 40 25.36" stroke="#43d1a7" stroke-width="11" fill="none"/>
+            <path d="M40 25.36 A40 40 0 0 1 80 25.36" stroke="#ffc845" stroke-width="11" fill="none"/>
+            <path d="M80 25.36 A40 40 0 0 1 100 60" stroke="#ff5d73" stroke-width="11" fill="none"/>
+            <path id="needle" d="M60 60 L60 24" stroke="#fff6e6" stroke-width="3.5" stroke-linecap="round"/>
+            <circle cx="60" cy="60" r="5.5" fill="#fff6e6"/>
+          </svg>
+          <div class="gl"><span>โอกาสถูกจับ</span><b id="dangerPct">0%</b></div>
+        </div>
+      </div>
+      <div class="stMid">
+        <div id="cardSlot"><div id="bigCard"></div></div>
+        <div class="tiles">
+          <div class="tile" id="tGems"><span class="ti" id="icoSeed"></span><div><div class="k">เมล็ดหล่นบนทาง</div><div class="v" id="pathGems">0</div></div></div>
+          <div class="tile" id="tRel"><span class="ti" id="icoRing"></span><div><div class="k">ของล้ำค่าบนทาง</div><div class="v" id="pathRelics">0</div></div></div>
+          <div class="tile"><span class="ti" id="icoHam"></span><div><div class="k">ยังอยู่ในครัว</div><div class="v sm" id="inTempleCount">0</div></div></div>
+        </div>
+      </div>
+      <div id="stageMsg"></div>
+      <div id="pathWrap"><div id="pathStrip"></div></div>
+    </section>
+    <aside id="crew">
+      <div class="chead"><b>สมาชิกแก๊ง</b><span>แก้ม · รัง · ล้ำค่า</span></div>
+      <div id="plist"></div>
+    </aside>
+  </main>
+
+  <footer id="controls">
+    <div id="statusMsg"></div>
+    <div id="ctlRow">
+      <button class="act explore" id="btnExplore" disabled>
+        <span class="ic"><svg viewBox="0 0 32 32"><ellipse cx="16" cy="21" rx="7" ry="6" fill="#7a4b0c"/><ellipse cx="8.5" cy="13" rx="3" ry="3.8" fill="#7a4b0c"/><ellipse cx="13.5" cy="8.5" rx="3" ry="3.8" fill="#7a4b0c"/><ellipse cx="18.5" cy="8.5" rx="3" ry="3.8" fill="#7a4b0c"/><ellipse cx="23.5" cy="13" rx="3" ry="3.8" fill="#7a4b0c"/></svg></span>
+        <span class="tx"><b>ตะลุยต่อ</b><small id="exSub">เสี่ยงเพื่อของกินที่มากกว่า</small></span>
+      </button>
+      <div id="mySum" class="hide"><div id="myAv"></div><div><div class="msk">ของคุณ</div><div class="msv"><span>แก้ม <b id="myCheek">0</b></span><span class="n">รัง <b id="myNest">0</b></span></div></div></div>
+      <button class="act camp" id="btnReturn" disabled>
+        <span class="ic"><svg viewBox="0 0 32 32"><ellipse cx="16" cy="22" rx="13" ry="7" fill="#0e6a51"/><path d="M4 21 q12 8 24 0" stroke="#05392b" stroke-width="2" fill="none"/><ellipse cx="16" cy="18" rx="9" ry="4" fill="#05392b"/><path d="M8 12 l8-7 8 7" stroke="#05392b" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="tx"><b>กลับรัง</b><small id="rtSub">เก็บเมล็ดในแก้มเข้ารังอย่างปลอดภัย</small></span>
+      </button>
+    </div>
+  </footer>
+</div>
+
+<!-- RESULTS -->
+<div class="screen center" id="screen-end">
+  <div class="menuWrap paper">
+    <h2 style="text-align:center">สรุปผลการบุกครัว</h2>
+    <div id="podium"></div>
+    <div id="winnerLine">—</div>
+    <div class="scrollArea" style="max-height:30vh;margin-top:8px">
+      <table id="resTable"><thead><tr><th style="text-align:left">สมาชิก</th><th>เมล็ดในรัง</th><th>ของล้ำค่า</th><th>รวม</th></tr></thead><tbody id="resBody"></tbody></table>
+    </div>
+    <button class="btn" id="btnAgain" style="margin-top:12px">บุกอีกรอบ!</button>
+    <button class="btn ghost" id="btnEndMenu">กลับเมนูหลัก</button>
+  </div>
+</div>
+
+<!-- RULES -->
+<div class="ov" id="ovRules">
+  <div class="paper" style="width:min(580px,95vw)">
+    <h2>วิธีเล่นแก๊งแก้มตุ่ย</h2>
+    <div class="scrollArea rulesBody" style="max-height:62vh">
+      <h3>เป้าหมาย</h3>
+      <p>แก๊งแฮมสเตอร์ 3–8 ตัวแอบบุกครัวตอนเที่ยงคืนรวม 5 คืน ใครมีเมล็ดในรังรวมกับของล้ำค่ามากที่สุดเมื่อจบคืนสุดท้ายคือผู้ชนะ (ถ้าเสมอ ผู้มีของล้ำค่ามากกว่าชนะ)</p>
+      <h3>กองการ์ด</h3>
+      <ul>
+        <li><span class="tag">ของกิน 15 ใบ</span> มูลค่า 1, 2, 3, 4, 5, 5, 7, 7, 9, 11, 11, 13, 14, 15, 17 เมล็ด</li>
+        <li><span class="tag">อันตราย 15 ใบ</span> 5 ชนิด ชนิดละ 3 ใบ: แมวส้ม กับดักหนู ไม้กวาด หุ่นยนต์ดูดฝุ่น ไฟฉายเจ้าบ้าน</li>
+        <li><span class="tag">ของล้ำค่า 5 ใบ</span> เพิ่มเข้ากองคืนละ 1 ใบ</li>
+      </ul>
+      <h3>ในแต่ละคืน</h3>
+      <ul>
+        <li>ทุกตัวย่องเข้าครัวพร้อมกัน แล้วเปิดการ์ดทีละใบ</li>
+        <li><b>ของกิน:</b> แบ่งเมล็ดเท่า ๆ กันให้ทุกตัวที่ยังอยู่ในครัว เก็บไว้ในแก้ม เศษที่หารไม่ลงตัวหล่นค้างบนการ์ดใบนั้น</li>
+        <li><b>อันตราย:</b> ครั้งแรกยังไม่เป็นไร แต่ถ้าชนิดเดิมโผล่<b>ครั้งที่สอง</b> คืนนั้นจบทันที ทุกตัวที่ยังอยู่ในครัวทำเมล็ดในแก้มหล่นหมด</li>
+        <li><b>ของล้ำค่า:</b> วางค้างบนทางจนกว่าจะมีคนคาบไป</li>
+        <li>หลังเปิดการ์ดแต่ละใบ ทุกตัวในครัวเลือกอย่างลับ ๆ ว่าจะ "ตะลุยต่อ" หรือ "กลับรัง" แล้วเปิดเผยพร้อมกัน</li>
+      </ul>
+      <h3>การกลับรัง</h3>
+      <ul>
+        <li>เมล็ดในแก้มถูกเก็บเข้ารังอย่างปลอดภัยถาวร</li>
+        <li>ตัวที่กลับพร้อมกันแบ่งเมล็ดที่หล่นบนการ์ดแต่ละใบเท่า ๆ กัน เศษยังค้างอยู่บนการ์ดใบนั้น</li>
+        <li>กลับรังแล้วจะออกมาอีกไม่ได้จนกว่าจะถึงคืนถัดไป</li>
+      </ul>
+      <h3>ของล้ำค่า</h3>
+      <ul>
+        <li>คาบไปได้เมื่อมีผู้กลับรัง<b>เพียงตัวเดียว</b>ในจังหวะนั้น และได้ของล้ำค่าบนทาง<b>ทั้งหมด</b></li>
+        <li>ชิ้นที่ 1–3 ที่ถูกคาบไปในเกมมีค่าชิ้นละ 5 ชิ้นที่ 4–5 มีค่าชิ้นละ 10</li>
+        <li>ของล้ำค่าที่ยังค้างอยู่ตอนจบคืนจะถูกนำออกจากเกม</li>
+      </ul>
+      <h3>จบคืน</h3>
+      <ul>
+        <li>จบเมื่อทุกตัวกลับรัง หรือเมื่ออันตรายชนิดเดิมโผล่ซ้ำ</li>
+        <li>ถ้าจบเพราะอันตราย การ์ดอันตรายชนิดนั้น 1 ใบจะถูกนำออกจากเกม</li>
+      </ul>
+      <h3>มาตรวัด "โอกาสถูกจับ"</h3>
+      <p>คำนวณจากข้อมูลที่ทุกคนเห็นอยู่แล้วเท่านั้น คือจำนวนการ์ดอันตรายชนิดที่โผล่แล้วซึ่งยังเหลือในกอง หารด้วยจำนวนการ์ดที่เหลือ</p>
+    </div>
+    <button class="btn ghost" id="closeRules" style="margin-top:10px">เข้าใจแล้ว</button>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="ov" id="ovSettings">
+  <div class="paper" style="width:min(400px,94vw)">
+    <h2>ตั้งค่า</h2>
+    <div class="swRow"><span>🎵 เพลงประกอบ</span><button class="sw on" id="swMusic" aria-label="เพลง"></button></div>
+    <div class="swRow"><span>🔊 เสียงประกอบ</span><button class="sw on" id="swSfx" aria-label="เสียงประกอบ"></button></div>
+    <button class="btn ghost" id="setRules" style="margin-top:14px">📖 วิธีเล่น</button>
+    <button class="btn danger" id="setQuit">ออกจากเกม</button>
+    <button class="btn mint" id="closeSettings">กลับไปเล่นต่อ</button>
+  </div>
+</div>
+
+<!-- DECISION REVEAL -->
+<div class="ov" id="ovDecisions"><div style="width:100%"><div id="decTitle">ทุกตัวล็อกแล้ว…</div><div id="decGrid"></div></div></div>
+
+<!-- PASS DEVICE -->
+<div class="ov" id="ovPass">
+  <div class="paper">
+    <div id="passAv" style="margin:0 auto"></div>
+    <div id="passStep1">
+      <div class="hint">ส่งเครื่องให้</div>
+      <div id="passName">—</div>
+      <div class="hint" style="margin-bottom:8px">คนอื่นห้ามแอบดูนะ!</div>
+      <button class="btn" id="passReady">ฉันพร้อมแล้ว</button>
+    </div>
+    <div id="passStep2" style="display:none">
+      <div class="hint">ตาของ <b id="passName2">—</b></div>
+      <div id="passInfo" class="hint" style="margin:2px 0 8px"></div>
+      <button class="btn" id="passGo">ตะลุยต่อ</button>
+      <button class="btn mint" id="passCamp">กลับรัง</button>
+    </div>
+  </div>
+</div>
+
+<div id="fxLayer"></div>
+<div id="banner"><span></span></div>
+<div id="errPanel"><button id="errClose">✕</button><b>เกิดข้อผิดพลาด</b><div id="errText"></div></div>
+
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js" onerror="window.PEER_FAIL=1"></script>
+<script>
+"use strict";
+var $=function(id){ return document.getElementById(id); };
+var ERRN=0;
+function showErr(msg){ try{ ERRN++; $('errPanel').style.display='block'; $('errText').textContent=(ERRN>1?'('+ERRN+') ':'')+String(msg); }catch(e){} }
+window.addEventListener('error',function(e){ showErr((e.message||'unknown')+' @'+(e.lineno||'?')); });
+window.addEventListener('unhandledrejection',function(e){ showErr('Promise: '+((e.reason&&e.reason.message)||e.reason)); });
+$('errClose').onclick=function(){ $('errPanel').style.display='none'; };
+function guard(fn){ return function(){ try{ return fn.apply(this,arguments); }catch(err){ showErr(err.message||err); } }; }
+function mk(tag,cls,txt){ var e=document.createElement(tag); if(cls) e.className=cls; if(txt!=null) e.textContent=txt; return e; }
+
+/* ---------- CONSTANTS ---------- */
+var TREASURES=[1,2,3,4,5,5,7,7,9,11,11,13,14,15,17];
+var HAZARDS=[{k:'cat',n:'แมวส้ม'},{k:'trap',n:'กับดักหนู'},{k:'broom',n:'ไม้กวาด'},{k:'robot',n:'หุ่นยนต์ดูดฝุ่น'},{k:'light',n:'ไฟฉายเจ้าบ้าน'}];
+var RELIC_VALUES=[5,5,5,10,10];
+var SEAT_COLORS=['#ffb547','#43d1a7','#ff7b93','#a38cff','#7cc6ff','#ffd84d','#9be15d','#ff9f68'];
+var FUR=['#f0a85a','#c98b5a','#a7adb8','#e9c48e','#d9826a','#8d6b57','#bfa58c','#f2b872'];
+var ACC=[5,1,2,3,4,6,7,0];
+var BOT_POOL=[{n:'ถั่วแดง',risk:0.9,d:'ขี้ตกใจ'},{n:'งาดำ',risk:1.1,d:'รอบคอบ'},{n:'ข้าวปั้น',risk:1.3,d:'ใจเย็น'},{n:'มอคค่า',risk:1.5,d:'กล้าได้กล้าเสีย'},
+  {n:'ชีสเค้ก',risk:1.75,d:'ตะกละ'},{n:'บราวนี่',risk:2.0,d:'บ้าบิ่น'},{n:'โมจิ',risk:1.0,d:'เจ้าเล่ห์'},{n:'ทองหยิบ',risk:1.62,d:'ตาโต'}];
+function hname(k){ for(var i=0;i<HAZARDS.length;i++) if(HAZARDS[i].k===k) return HAZARDS[i].n; return '?'; }
+function lootName(v){ return v<=5?'กองเมล็ดทานตะวัน':(v<=11?'ชีสก้อนโต':'เค้กสตรอว์เบอร์รี่'); }
+
+/* ---------- ORIGINAL ART ---------- */
+function seedG(x,y,r,s){ return '<g transform="translate('+x+' '+y+') rotate('+r+') scale('+(s||1)+')"><path d="M0-9C6-6 6 6 0 10C-6 6-6-6 0-9Z" fill="#3a302c"/><path d="M0-6.5V8M-2.6-4V5.5M2.6-4V5.5" stroke="#efe6d2" stroke-width="1.1" stroke-linecap="round"/></g>'; }
+function seedIco(){ return '<svg class="sico" viewBox="-11 -11 22 22">'+seedG(0,0,25,1)+'</svg>'; }
+function ringIco(){ return '<svg viewBox="0 0 24 24"><circle cx="12" cy="15" r="6" fill="none" stroke="#f2a92a" stroke-width="3"/><polygon points="8,8 12,3 16,8 12,12" fill="#43d1a7"/></svg>'; }
+function hamsterSVG(fur,cheek,acc,mood,crown){
+  cheek=Math.max(0,Math.min(1,cheek||0));
+  var cr=(5.5+cheek*7).toFixed(1), lx=(15-cheek*2.5).toFixed(1), rx=(49+cheek*2.5).toFixed(1), ec=(acc===5)?'#fff6e6':'#2a1d16';
+  var s='<svg viewBox="0 0 64 64" aria-hidden="true">';
+  s+='<circle cx="16" cy="16" r="7.5" fill="'+fur+'"/><circle cx="48" cy="16" r="7.5" fill="'+fur+'"/><circle cx="16" cy="16" r="4" fill="#ffb7b7"/><circle cx="48" cy="16" r="4" fill="#ffb7b7"/>';
+  s+='<ellipse cx="32" cy="36" rx="23" ry="22" fill="'+fur+'"/><path d="M15 25 Q32 14 49 25" stroke="rgba(255,255,255,.28)" stroke-width="3" fill="none" stroke-linecap="round"/>';
+  s+='<ellipse cx="32" cy="43" rx="14" ry="12.5" fill="#fff4e3"/>';
+  s+='<circle cx="'+lx+'" cy="42" r="'+cr+'" fill="#fff4e3"/><circle cx="'+rx+'" cy="42" r="'+cr+'" fill="#fff4e3"/>';
+  s+='<ellipse cx="'+lx+'" cy="44" rx="3.6" ry="2.2" fill="#ff9fb0" opacity=".6"/><ellipse cx="'+rx+'" cy="44" rx="3.6" ry="2.2" fill="#ff9fb0" opacity=".6"/>';
+  if(acc===5) s+='<rect x="13" y="26" width="38" height="11" rx="5.5" fill="#2b2547"/><path d="M13 31 L7 27 M13 32 L7 35" stroke="#2b2547" stroke-width="2.4" stroke-linecap="round"/>';
+  if(mood==='happy') s+='<path d="M21 33 q3-3.5 6 0 M37 33 q3-3.5 6 0" stroke="'+ec+'" stroke-width="2.2" fill="none" stroke-linecap="round"/>';
+  else if(mood==='lost') s+='<path d="M21.5 29.5l5 5M26.5 29.5l-5 5M37.5 29.5l5 5M42.5 29.5l-5 5" stroke="'+ec+'" stroke-width="2" stroke-linecap="round"/>';
+  else if(mood==='scared') s+='<circle cx="24" cy="32" r="4" fill="#fff"/><circle cx="40" cy="32" r="4" fill="#fff"/><circle cx="24" cy="32.5" r="1.6" fill="#2a1d16"/><circle cx="40" cy="32.5" r="1.6" fill="#2a1d16"/>';
+  else { if(acc===5) s+='<circle cx="24" cy="32" r="3.8" fill="#fff6e6"/><circle cx="40" cy="32" r="3.8" fill="#fff6e6"/>';
+    s+='<circle cx="24" cy="32" r="2.8" fill="#2a1d16"/><circle cx="40" cy="32" r="2.8" fill="#2a1d16"/><circle cx="25" cy="31" r="1" fill="#fff"/><circle cx="41" cy="31" r="1" fill="#fff"/>'; }
+  s+='<ellipse cx="32" cy="38.5" rx="2.4" ry="1.7" fill="#ff7b93"/>';
+  s+=(mood==='scared')?'<ellipse cx="32" cy="44" rx="2.2" ry="2.6" fill="#5b3a2a"/>':'<path d="M32 40v2M32 42q-2.8 2.4-5 .2M32 42q2.8 2.4 5 .2" stroke="#5b3a2a" stroke-width="1.2" fill="none" stroke-linecap="round"/><rect x="30.6" y="42.4" width="2.8" height="3" rx=".8" fill="#fff"/>';
+  if(acc===7) s+='<path d="M17 50 Q32 58 47 50 L32 62Z" fill="#7cc6ff"/><circle cx="32" cy="53" r="1.4" fill="#fff"/>';
+  s+='<ellipse cx="25" cy="55" rx="4" ry="2.8" fill="#ffcfc2"/><ellipse cx="39" cy="55" rx="4" ry="2.8" fill="#ffcfc2"/>';
+  if(acc===1) s+='<g transform="translate(50 10)"><path d="M0 0 L-7 -5 L-7 5Z M0 0 L7 -5 L7 5Z" fill="#ff5d73"/><circle r="2.4" fill="#ff9fb0"/></g>';
+  else if(acc===2) s+='<path d="M13 22 Q32 0 51 22Z" fill="#43d1a7"/><rect x="12" y="19" width="40" height="6" rx="3" fill="#179a78"/><circle cx="32" cy="6" r="4" fill="#fff6e6"/>';
+  else if(acc===3) s+='<g fill="rgba(255,255,255,.18)" stroke="#2b2547" stroke-width="1.8"><circle cx="24" cy="32" r="5.6"/><circle cx="40" cy="32" r="5.6"/></g><path d="M29.6 32h4.8" stroke="#2b2547" stroke-width="1.8"/>';
+  else if(acc===4) s+='<path d="M32 14 V7" stroke="#2f8a4c" stroke-width="2" stroke-linecap="round"/><path d="M32 8 Q24 2 22 9 Q28 11 32 8Z" fill="#5ccf7a"/><path d="M32 8 Q40 2 42 9 Q36 11 32 8Z" fill="#43b86a"/>';
+  else if(acc===6) s+='<path d="M11 24 Q32 12 53 24" stroke="#3f4a66" stroke-width="3.5" fill="none"/><circle cx="32" cy="16" r="5" fill="#59668a"/><circle cx="32" cy="16" r="3" fill="#ffe58a"/>';
+  if(crown) s+='<path d="M20 13 L23 2 L28 9 L32 0 L36 9 L41 2 L44 13Z" fill="#ffc845" stroke="#c8901d" stroke-width="1.2" stroke-linejoin="round"/>';
+  return s+'</svg>';
+}
+function avatarFor(idx,cheek,mood,crown){ return hamsterSVG(FUR[idx%8],cheek,ACC[idx%8],mood,crown); }
+function artLoot(v){
+  var s='<svg viewBox="0 0 100 100"><ellipse cx="50" cy="81" rx="38" ry="10" fill="#e3d3b4"/><ellipse cx="50" cy="79" rx="38" ry="10" fill="#fff"/><ellipse cx="50" cy="79" rx="29" ry="6.5" fill="none" stroke="#efe2c6" stroke-width="1.5"/>';
+  if(v<=5){
+    var P=[[36,74,-30],[50,76,10],[64,74,40],[42,66,-12],[58,66,25],[50,58,0],[30,80,-60],[70,80,60]];
+    for(var i=0;i<Math.min(P.length,v+3);i++) s+=seedG(P[i][0],P[i][1],P[i][2],1.2);
+  } else if(v<=11){
+    s+='<polygon points="18,58 64,36 86,48 40,70" fill="#ffe7a0"/><polygon points="18,58 40,70 40,84 18,72" fill="#ffcf4d"/><polygon points="40,70 86,48 86,62 40,84" fill="#f5b82e"/>';
+    s+='<ellipse cx="60" cy="68" rx="4" ry="3" fill="#e09a1c"/><ellipse cx="75" cy="60" rx="3" ry="2.4" fill="#e09a1c"/><ellipse cx="52" cy="52" rx="4.5" ry="2" fill="#f2c95a"/><ellipse cx="27" cy="69" rx="2.5" ry="3" fill="#e9a925"/>';
+    s+=seedG(16,84,-50,.7)+seedG(84,84,40,.7);
+  } else {
+    s+='<polygon points="16,52 60,34 86,46 42,64" fill="#fff9f0"/><polygon points="16,52 42,64 42,84 16,72" fill="#f6cf8e"/><polygon points="16,60 42,72 42,75 16,63" fill="#fff"/><polygon points="16,66 42,78 42,80 16,68" fill="#ff5d73"/>';
+    s+='<polygon points="42,64 86,46 86,66 42,84" fill="#eebc72"/><polygon points="42,72 86,54 86,57 42,75" fill="#fff"/><polygon points="42,78 86,60 86,62 42,80" fill="#ff5d73"/>';
+    s+='<circle cx="30" cy="50" r="4" fill="#fff"/><circle cx="72" cy="44" r="4" fill="#fff"/>';
+    s+='<path d="M50 52 C40 46 42 34 50 37 C58 34 60 46 50 52Z" fill="#ff4d6a"/><path d="M45 37 L50 32 L55 37 L50 35Z" fill="#43b86a"/><g fill="#ffe08a"><circle cx="47" cy="42" r=".9"/><circle cx="53" cy="42" r=".9"/><circle cx="50" cy="46" r=".9"/></g>';
+    s+=seedG(14,84,-50,.7)+seedG(86,84,40,.7);
+  }
+  return s+'</svg>';
+}
+function artRelic(){
+  return '<svg viewBox="0 0 100 100"><ellipse cx="50" cy="86" rx="26" ry="6" fill="rgba(0,0,0,.1)"/>'+
+  '<circle cx="50" cy="60" r="20" fill="none" stroke="#c8901d" stroke-width="9"/><circle cx="50" cy="60" r="20" fill="none" stroke="#ffd65a" stroke-width="6"/>'+
+  '<path d="M34 52 A18 18 0 0 1 50 42" stroke="#fff6c9" stroke-width="2.5" fill="none" stroke-linecap="round"/>'+
+  '<polygon points="36,36 50,22 64,36 50,50" fill="#38c9a6"/><polygon points="36,36 50,22 50,36" fill="#8ff5dc"/><polygon points="50,22 64,36 50,36" fill="#5fe0c0"/><polygon points="36,36 50,50 50,36" fill="#21a585"/>'+
+  '<rect x="44" y="47" width="12" height="5" rx="2" fill="#c8901d"/>'+
+  '<path d="M78 22l2 6 6 2-6 2-2 6-2-6-6-2 6-2z" fill="#ffd65a"/><path d="M22 44l1.4 4 4 1.4-4 1.4-1.4 4-1.4-4-4-1.4 4-1.4z" fill="#ffd65a"/></svg>';
+}
+function artBack(){
+  return '<svg viewBox="0 0 100 100"><circle cx="50" cy="52" r="36" fill="none" stroke="rgba(255,246,230,.2)" stroke-width="2" stroke-dasharray="4 5"/>'+
+  '<ellipse cx="50" cy="62" rx="16" ry="13" fill="#ffc845"/><ellipse cx="32" cy="44" rx="6.5" ry="8" fill="#ffc845"/><ellipse cx="44" cy="34" rx="6.5" ry="8.5" fill="#ffc845"/><ellipse cx="56" cy="34" rx="6.5" ry="8.5" fill="#ffc845"/><ellipse cx="68" cy="44" rx="6.5" ry="8" fill="#ffc845"/></svg>';
+}
+function artHazard(k){
+  var s='<svg viewBox="0 0 100 100">';
+  if(k==='cat'){
+    s+='<polygon points="18,44 26,12 44,32" fill="#f39a3c"/><polygon points="82,44 74,12 56,32" fill="#f39a3c"/><polygon points="24,36 28,20 38,31" fill="#ffb3a7"/><polygon points="76,36 72,20 62,31" fill="#ffb3a7"/>'+
+      '<ellipse cx="50" cy="56" rx="34" ry="28" fill="#f6a347"/><path d="M42 30 l2 10 M50 28 v12 M58 30 l-2 10" stroke="#d9772a" stroke-width="3.5" stroke-linecap="round"/>'+
+      '<ellipse cx="50" cy="69" rx="14" ry="10" fill="#fff1dd"/><ellipse cx="36" cy="52" rx="8" ry="7" fill="#d8f35a"/><ellipse cx="64" cy="52" rx="8" ry="7" fill="#d8f35a"/>'+
+      '<ellipse cx="36" cy="52" rx="1.8" ry="6" fill="#1a1420"/><ellipse cx="64" cy="52" rx="1.8" ry="6" fill="#1a1420"/>'+
+      '<path d="M26 42 L44 47 M74 42 L56 47" stroke="#7a3b10" stroke-width="3.5" stroke-linecap="round"/><polygon points="46,63 54,63 50,67" fill="#ff7b93"/>'+
+      '<path d="M50 67 Q46 73 41 70 M50 67 Q54 73 59 70" stroke="#5a2c10" stroke-width="2" fill="none" stroke-linecap="round"/>'+
+      '<polygon points="43,71 46,71 44.5,76" fill="#fff"/><polygon points="54,71 57,71 55.5,76" fill="#fff"/>'+
+      '<path d="M30 66 H12 M30 71 L13 76 M70 66 H88 M70 71 L87 76" stroke="#fff1dd" stroke-width="1.6" stroke-linecap="round"/>';
+  } else if(k==='trap'){
+    s+='<polygon points="10,70 66,54 90,64 34,82" fill="#d79a5c"/><polygon points="34,82 90,64 90,71 34,89" fill="#8a5530"/><polygon points="10,70 34,82 34,89 10,77" fill="#a86b3c"/>'+
+      '<path d="M22 70 L62 58" stroke="#b07a46" stroke-width="1.5"/>'+
+      '<path d="M30 74 L40 44 L78 34 L72 62" fill="none" stroke="#dfe5ee" stroke-width="4.5" stroke-linejoin="round"/><path d="M30 74 L40 44 L78 34 L72 62" fill="none" stroke="#8d97a8" stroke-width="1.5" stroke-linejoin="round"/>'+
+      '<g fill="none" stroke="#b8c1cf" stroke-width="3"><circle cx="46" cy="70" r="5"/><circle cx="54" cy="68" r="5"/></g>'+
+      '<polygon points="60,60 76,54 78,62 64,66" fill="#ffc845"/><circle cx="70" cy="60" r="1.6" fill="#e09a1c"/>'+
+      '<path d="M14 40 l6 6 M10 52 l8 2 M24 30 l2 8" stroke="#ff5d73" stroke-width="3" stroke-linecap="round"/>';
+  } else if(k==='broom'){
+    s+='<path d="M80 8 L48 62" stroke="#a86b3c" stroke-width="7" stroke-linecap="round"/><path d="M80 8 L48 62" stroke="#c98a50" stroke-width="3" stroke-linecap="round"/>'+
+      '<polygon points="40,56 58,66 72,94 16,92" fill="#f0c95a"/><path d="M24 92 L42 60 M34 93 L46 62 M44 94 L50 64 M54 94 L54 66 M64 94 L57 68" stroke="#c99a2e" stroke-width="1.6"/>'+
+      '<polygon points="39,54 60,64 57,70 36,60" fill="#ff5d73"/>'+
+      '<g fill="#cfc7e6" opacity=".8"><circle cx="12" cy="88" r="5"/><circle cx="20" cy="83" r="4"/><circle cx="82" cy="90" r="5"/><circle cx="89" cy="84" r="3.5"/></g>';
+  } else if(k==='robot'){
+    s+='<ellipse cx="50" cy="74" rx="38" ry="11" fill="rgba(0,0,0,.3)"/><path d="M12 56 V64 A38 14 0 0 0 88 64 V56Z" fill="#aab3c8"/>'+
+      '<ellipse cx="50" cy="56" rx="38" ry="14" fill="#f2f5fb"/><ellipse cx="50" cy="54" rx="26" ry="8" fill="#e1e6f0"/>'+
+      '<rect x="34" y="44" width="32" height="12" rx="6" fill="#262c40"/><path d="M39 48 l7 3 M61 48 l-7 3" stroke="#ff5d73" stroke-width="2.6" stroke-linecap="round"/>'+
+      '<path d="M50 38 V30" stroke="#8d97a8" stroke-width="2"/><circle cx="50" cy="40" r="3" fill="#7cc6ff"/>'+
+      '<path d="M12 30 q8-8 16 0 t16 0" stroke="#cfc7e6" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".8"/><path d="M60 22 q6-6 12 0 t12 0" stroke="#cfc7e6" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".6"/>';
+  } else {
+    s+='<polygon points="58,46 98,20 98,98 58,74" fill="#fff3b0" opacity=".35"/><polygon points="58,50 98,36 98,84 58,70" fill="#fff8d6" opacity=".45"/>'+
+      '<g transform="rotate(-10 40 60)"><rect x="8" y="52" width="40" height="18" rx="5" fill="#3f4a66"/><rect x="16" y="52" width="4" height="18" fill="#2c3550"/><rect x="26" y="52" width="4" height="18" fill="#2c3550"/><polygon points="48,48 60,44 60,78 48,74" fill="#59668a"/><rect x="58" y="44" width="4" height="34" rx="1.5" fill="#fff3b0"/></g>'+
+      '<g fill="#2a1236"><circle cx="82" cy="58" r="9"/><circle cx="76" cy="49" r="3.5"/><circle cx="88" cy="49" r="3.5"/><ellipse cx="82" cy="68" rx="8" ry="5"/></g>'+
+      '<path d="M82 24 V34" stroke="#ff5d73" stroke-width="3.5" stroke-linecap="round"/><circle cx="82" cy="40" r="2" fill="#ff5d73"/>';
+  }
+  return s+'</svg>';
+}
+function cardHTML(c){
+  if(c.t==='t') return '<div class="card k-loot"><div class="cin"><div class="ctop">'+lootName(c.v)+'</div><div class="cart">'+artLoot(c.v)+'</div><div class="cval">'+seedIco()+'<span>'+c.v+' เมล็ด</span></div></div></div>';
+  if(c.t==='r') return '<div class="card k-relic"><div class="cin"><div class="ctop">ของล้ำค่า</div><div class="cart">'+artRelic()+'</div><div class="cval">หายากมาก</div></div></div>';
+  return '<div class="card k-haz"><div class="cin"><div class="ctop">'+hname(c.k)+'</div><div class="cart">'+artHazard(c.k)+'</div><div class="cval">อันตราย!</div></div></div>';
+}
+function backHTML(r){ return '<div class="card k-back"><div class="cin"><div class="ctop">ประตูครัว</div><div class="cart">'+artBack()+'</div><div class="cval">คืนที่ '+r+'</div></div></div>'; }
+
+/* ---------- AUDIO (synthesised, never blocks gameplay) ---------- */
+var Snd={
+  ctx:null,master:null,musicGain:null,noiseBuf:null,music:true,sfx:true,ready:false,timer:null,step:0,tension:0,
+  init:function(){
+    if(this.ready) return;
+    try{
+      var AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+      this.ctx=new AC(); this.master=this.ctx.createGain(); this.master.gain.value=0.8; this.master.connect(this.ctx.destination);
+      this.musicGain=this.ctx.createGain(); this.musicGain.gain.value=0; this.musicGain.connect(this.master);
+      var n=Math.floor(this.ctx.sampleRate*1.2), b=this.ctx.createBuffer(1,n,this.ctx.sampleRate), d=b.getChannelData(0);
+      for(var i=0;i<n;i++) d[i]=Math.random()*2-1;
+      this.noiseBuf=b; this.ready=true;
+    }catch(e){ this.ready=false; }
+  },
+  resume:function(){ try{ if(this.ctx&&this.ctx.state==='suspended') this.ctx.resume(); }catch(e){} },
+  tone:function(f,dur,type,vol,f2,dest){
+    if(!this.ready) return;
+    if(!dest&&!this.sfx) return;
+    try{
+      var t=this.ctx.currentTime,o=this.ctx.createOscillator(),g=this.ctx.createGain();
+      o.type=type||'sine'; o.frequency.setValueAtTime(f,t);
+      if(f2) o.frequency.exponentialRampToValueAtTime(Math.max(20,f2),t+dur);
+      g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(vol||0.2,t+0.01); g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+      o.connect(g); g.connect(dest||this.master); o.start(t); o.stop(t+dur+0.03);
+    }catch(e){}
+  },
+  noise:function(dur,vol,freq,type,dest){
+    if(!this.ready) return;
+    if(!dest&&!this.sfx) return;
+    try{
+      var t=this.ctx.currentTime,s=this.ctx.createBufferSource(); s.buffer=this.noiseBuf;
+      var f=this.ctx.createBiquadFilter(); f.type=type||'bandpass'; f.frequency.value=freq||900; f.Q.value=0.9;
+      var g=this.ctx.createGain(); g.gain.setValueAtTime(vol||0.2,t); g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+      s.connect(f); f.connect(g); g.connect(dest||this.master); s.start(t); s.stop(t+dur);
+    }catch(e){}
+  },
+  later:function(ms,fn){ setTimeout(function(){ try{ fn(); }catch(e){} },ms); },
+  play:function(name){
+    if(!this.ready||!this.sfx) return;
+    var S_=this, i;
+    try{
+      switch(name){
+        case 'card': this.noise(0.18,0.16,2400,'highpass'); this.tone(520,0.09,'triangle',0.08,900); break;
+        case 'seed': for(i=0;i<5;i++) (function(i){ S_.later(i*55,function(){ S_.tone(1700+Math.random()*900,0.05,'square',0.035); }); })(i); break;
+        case 'relic': [784,988,1175,1568].forEach(function(f,i){ S_.later(i*95,function(){ S_.tone(f,0.5,'triangle',0.14); }); }); break;
+        case 'scurry': for(i=0;i<7;i++) (function(i){ S_.later(i*42,function(){ S_.noise(0.035,0.12,3200,'bandpass'); }); })(i); break;
+        case 'creak': this.tone(150,0.6,'sawtooth',0.04,95); break;
+        case 'tick': this.tone(1000,0.05,'square',0.05); break;
+        case 'warn': this.tone(880,0.12,'square',0.08); this.later(130,function(){ S_.tone(620,0.2,'square',0.08); }); break;
+        case 'meow':
+          var t=this.ctx.currentTime,o=this.ctx.createOscillator(),g=this.ctx.createGain(),f=this.ctx.createBiquadFilter();
+          f.type='lowpass'; f.frequency.value=1900; o.type='sawtooth';
+          o.frequency.setValueAtTime(480,t); o.frequency.exponentialRampToValueAtTime(900,t+0.16); o.frequency.exponentialRampToValueAtTime(430,t+0.5);
+          g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.09,t+0.05); g.gain.exponentialRampToValueAtTime(0.0001,t+0.55);
+          o.connect(f); f.connect(g); g.connect(this.master); o.start(t); o.stop(t+0.6); break;
+        case 'reveal': this.tone(400,0.1,'triangle',0.12,800); this.later(90,function(){ S_.tone(800,0.14,'triangle',0.12,1300); }); break;
+        case 'safe': this.tone(659,0.18,'sine',0.14); this.later(110,function(){ S_.tone(988,0.32,'sine',0.13); }); break;
+        case 'collapse': this.noise(1.1,0.38,500,'lowpass'); this.tone(220,0.9,'sawtooth',0.1,60); this.later(120,function(){ S_.noise(0.6,0.22,2600,'highpass'); }); this.later(260,function(){ S_.play('seed'); }); break;
+        case 'victory': [523,659,784,1046,784,1046,1318].forEach(function(f,i){ S_.later(i*120,function(){ S_.tone(f,0.5,'triangle',0.16); }); }); break;
+      }
+    }catch(e){}
+  },
+  MEL:[69,0,0,72,0,71,0,0,69,0,64,0,0,67,0,0,69,0,0,72,0,74,0,72,71,0,0,67,0,64,0,0],
+  BASS:[45,43,41,40],
+  mf:function(m){ return 440*Math.pow(2,(m-69)/12); },
+  startMusic:function(){
+    this.init(); if(!this.ready) return; this.resume();
+    try{ this.musicGain.gain.cancelScheduledValues(this.ctx.currentTime); this.musicGain.gain.setTargetAtTime(this.music?0.55:0,this.ctx.currentTime,0.6); }catch(e){}
+    if(this.timer) return;
+    var self=this;
+    (function loop(){ try{ self.beat(); }catch(e){} self.timer=setTimeout(loop,Math.round(210-self.tension*60)); })();
+  },
+  beat:function(){
+    if(!this.ready||!this.music) return;
+    var s=this.step%32, th=this.tension, mg=this.musicGain;
+    if(s%4===0) this.tone(this.mf(this.BASS[Math.floor(s/8)]),0.3,'triangle',0.13,null,mg);
+    var m=this.MEL[s];
+    if(m){ this.tone(this.mf(m),0.22,'triangle',0.06+th*0.02,null,mg); this.tone(this.mf(m)*4,0.08,'sine',0.012,null,mg); }
+    if(th>0.3&&s%2===1) this.noise(0.03,0.025+th*0.02,6000,'highpass',mg);
+    if(th>0.55&&(s%8===0||s%8===2)) this.tone(62,0.16,'sine',0.22,40,mg);
+    this.step++;
+  },
+  stopMusic:function(){ try{ if(this.musicGain) this.musicGain.gain.setTargetAtTime(0,this.ctx.currentTime,0.3); }catch(e){} },
+  setTension:function(v){ this.tension=Math.max(0,Math.min(1,v||0)); }
+};
+var audioUnlocked=false;
+function unlockAudio(){ if(audioUnlocked) return; audioUnlocked=true; try{ Snd.init(); Snd.resume(); if(Snd.music) Snd.startMusic(); }catch(e){} }
+document.addEventListener('pointerdown',unlockAudio);
+document.addEventListener('keydown',unlockAudio);
+
+/* ---------- STATE ---------- */
+var MODE='local', isHost=true, myPid=null, VIEW=null, S=null, PIDN=0, DTOK=0;
+function shuffle(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+function newPlayer(name,bot,risk,desc){ PIDN++; return {id:'p'+PIDN,name:name,bot:!!bot,risk:risk||1.2,desc:desc||'',tent:0,carried:0,relics:[],inTemple:false,decision:null,conn:true,dcAt:0,gain:0,lost:false}; }
+function newState(){ return {room:'',round:0,maxRounds:5,phase:'lobby',players:[],deck:[],path:[],seen:{},removed:{},artifacts:0,relicsOnPath:0,relicsClaimed:0,msg:'',fx:'',fxId:0,lastDecisions:null,tick:0,dtok:0}; }
+function buildDeck(){
+  var d=[],i,j;
+  for(i=0;i<TREASURES.length;i++) d.push({t:'t',v:TREASURES[i],left:0});
+  for(i=0;i<HAZARDS.length;i++){ var cnt=3-(S.removed[HAZARDS[i].k]||0); for(j=0;j<cnt;j++) d.push({t:'h',k:HAZARDS[i].k}); }
+  for(i=0;i<S.artifacts;i++) d.push({t:'r',claimed:false});
+  return shuffle(d);
+}
+function inTemple(){ return S.players.filter(function(p){ return p.inTemple; }); }
+function totalPathGems(){ var s=0; for(var i=0;i<S.path.length;i++) if(S.path[i].t==='t') s+=(S.path[i].left||0); return s; }
+function pathShareFor(k){ var s=0; k=Math.max(1,k); for(var i=0;i<S.path.length;i++){ var c=S.path[i]; if(c.t==='t'&&c.left>0) s+=Math.floor(c.left/k); } return s; }
+function dangerPct(){ if(!S.deck.length) return 0; var d=0; for(var i=0;i<S.deck.length;i++) if(S.deck[i].t==='h'&&S.seen[S.deck[i].k]) d++; return Math.round(d*100/S.deck.length); }
+function localMe(){ if(!S) return null; var h=S.players.filter(function(p){ return !p.bot; }); return h.length===1?h[0].id:null; }
+
+/* ---------- VIEW (per-player, hides others' decisions) ---------- */
+function viewFor(pid){
+  var revealing=(S.phase==='dreveal');
+  return {
+    room:S.room,round:S.round,maxRounds:S.maxRounds,phase:S.phase,deckLeft:S.deck.length,
+    seen:JSON.parse(JSON.stringify(S.seen)),removed:JSON.parse(JSON.stringify(S.removed)),
+    relicsOnPath:S.relicsOnPath,msg:S.msg,fx:S.fx,fxId:S.fxId,tick:S.tick,
+    danger:(S.phase==='lobby'||S.phase==='gameover')?0:dangerPct(),
+    lastDecisions:(revealing&&S.lastDecisions)?S.lastDecisions.slice():null,
+    pathGems:totalPathGems(),
+    path:S.path.map(function(c){ return {t:c.t,v:c.v,k:c.k,left:c.left,claimed:c.claimed}; }),
+    me:pid,
+    players:S.players.map(function(p,i){
+      return {id:p.id,idx:i,name:p.name,bot:p.bot,desc:p.desc,tent:p.tent,carried:p.carried,relics:p.relics.slice(),inTemple:p.inTemple,
+        locked:!!p.decision,conn:p.conn!==false,gain:p.gain||0,lost:!!p.lost,myDecision:(p.id===pid?p.decision:null)};
+    })
+  };
+}
+function push(){
+  try{
+    S.tick++;
+    if(MODE==='online'&&isHost){ for(var pid in conns){ var c=conns[pid]; if(c&&c.open){ try{ c.send({t:'state',s:viewFor(pid)}); }catch(e){} } } }
+    applyView(viewFor(MODE==='online'?myPid:localMe()));
+  }catch(e){ showErr('push: '+e.message); }
+}
+
+/* ---------- ENGINE (host authoritative) ---------- */
+function startGame(rounds){
+  S.maxRounds=rounds||5; S.round=0; S.artifacts=0; S.removed={}; S.relicsClaimed=0;
+  S.players.forEach(function(p){ p.tent=0; p.relics=[]; p.carried=0; p.inTemple=false; p.decision=null; p.gain=0; p.lost=false; });
+  resetView(); startRound();
+}
+function startRound(){
+  S.round++; S.artifacts++;
+  S.deck=buildDeck(); S.seen={}; S.path=[]; S.relicsOnPath=0; S.lastDecisions=null;
+  S.players.forEach(function(p){ p.inTemple=true; p.carried=0; p.decision=null; p.gain=0; p.lost=false; });
+  S.phase='roundstart'; S.msg='คืนที่ '+S.round+' — แก๊งแก้มตุ่ยย่องออกจากรังเข้าสู่ครัว…';
+  S.fx='newround'; S.fxId++; Snd.setTension(0);
+  push();
+  var tok=++DTOK; setTimeout(function(){ if(tok===DTOK) nextCard(); },2100);
+}
+function nextCard(){
+  try{
+    if(!S.deck.length){ endRound(null); return; }
+    var c=S.deck.pop(); S.path.push(c);
+    var bust=null, n=Math.max(1,inTemple().length);
+    if(c.t==='t'){
+      var per=Math.floor(c.v/n); c.left=c.v-per*n;
+      S.players.forEach(function(p){ if(p.inTemple) p.carried+=per; });
+      S.msg='เจอ'+lootName(c.v)+' '+c.v+' เมล็ด! ยัดแก้มได้ตัวละ '+per+(c.left>0?(' · หล่นบนทาง '+c.left):'');
+    } else if(c.t==='r'){
+      S.artifacts--; S.relicsOnPath++;
+      S.msg='เจอของล้ำค่า! ต้องกลับรังเพียงตัวเดียวจึงจะคาบไปได้';
+    } else {
+      if(S.seen[c.k]){ bust=c.k; S.msg=hname(c.k)+'โผล่มาเป็นครั้งที่สอง! วิ่งหนีกันจ้าละหวั่น!'; }
+      else { S.seen[c.k]=1; S.msg='ระวัง! '+hname(c.k)+'โผล่มาแล้ว ถ้าเจอซ้ำอีกครั้งทุกตัวต้องแตกกระเจิง'; }
+    }
+    S.phase='reveal'; S.fx=bust?'bustcard':'card'; S.fxId++;
+    Snd.setTension(dangerPct()/100*2.2);
+    push();
+    var tok=++DTOK;
+    setTimeout(function(){ if(tok!==DTOK) return; if(bust) endRound(bust); else startDecision(); },bust?1500:1600);
+  }catch(e){ showErr('nextCard: '+e.message); }
+}
+function startDecision(){
+  S.phase='decide'; S.lastDecisions=null;
+  S.players.forEach(function(p){ p.decision=null; });
+  S.msg='เลือกอย่างลับ ๆ — ตะลุยต่อ หรือ กลับรัง?';
+  S.fx='decide'; S.fxId++;
+  var tok=++DTOK; S.dtok=tok;
+  push();
+  var act=inTemple();
+  act.filter(function(p){ return p.bot; }).forEach(function(p){
+    setTimeout(function(){ if(S.dtok!==tok||S.phase!=='decide') return; submitDecision(p.id,botDecide(p)); },800+Math.random()*2400);
+  });
+  if(MODE==='local'){ var humans=act.filter(function(p){ return !p.bot; }); if(humans.length>1) runPassFlow(humans); }
+  var watch=setInterval(function(){
+    if(S.dtok!==tok||S.phase!=='decide'){ clearInterval(watch); return; }
+    var now=Date.now(), changed=false;
+    inTemple().forEach(function(p){ if(!p.decision&&!p.bot&&p.conn===false&&now-(p.dcAt||now)>30000){ p.decision='camp'; changed=true; } });
+    if(changed) checkAllDecided();
+  },3000);
+}
+function submitDecision(pid,d){
+  try{
+    if(S.phase!=='decide') return;
+    var p=null; for(var i=0;i<S.players.length;i++) if(S.players[i].id===pid) p=S.players[i];
+    if(!p||!p.inTemple||p.decision) return;
+    p.decision=(d==='camp')?'camp':'go';
+    Snd.play('tick'); checkAllDecided();
+  }catch(e){ showErr('submit: '+e.message); }
+}
+function checkAllDecided(){ var act=inTemple(); if(act.length&&act.every(function(p){ return !!p.decision; })) resolveDecisions(); else push(); }
+function resolveDecisions(){
+  try{
+    var act=inTemple(), returners=act.filter(function(p){ return p.decision==='camp'; });
+    S.lastDecisions=act.map(function(p){ return {id:p.id,idx:S.players.indexOf(p),name:p.name,d:p.decision}; });
+    S.phase='dreveal'; S.fx='dec'; S.fxId++; S.msg='เปิดเผยพร้อมกัน!';
+    push();
+    var tok=++DTOK;
+    setTimeout(function(){
+      if(tok!==DTOK) return;
+      try{
+        if(returners.length){
+          var k=returners.length, share=0;
+          S.path.forEach(function(c){ if(c.t==='t'&&c.left>0){ var per=Math.floor(c.left/k); share+=per; c.left-=per*k; } });
+          returners.forEach(function(p){ p.gain=p.carried+share; p.tent+=p.gain; p.carried=0; p.inTemple=false; p.decision=null; });
+          if(k===1&&S.relicsOnPath>0){
+            var lone=returners[0], got=S.relicsOnPath;
+            for(var r=0;r<got;r++){ lone.relics.push(RELIC_VALUES[Math.min(S.relicsClaimed,RELIC_VALUES.length-1)]); S.relicsClaimed++; }
+            S.relicsOnPath=0; S.path.forEach(function(c){ if(c.t==='r') c.claimed=true; });
+            S.msg=lone.name+' กลับรังตัวเดียวและคาบของล้ำค่าไป '+got+' ชิ้น! (+'+lone.gain+' เมล็ด)';
+          } else S.msg=returners.map(function(p){ return p.name+' (+'+p.gain+')'; }).join(' · ')+' วิ่งกลับรังอย่างปลอดภัย';
+        } else S.msg='ทุกตัวตัดสินใจตะลุยลึกเข้าไปอีก…';
+        S.players.forEach(function(p){ p.decision=null; });
+        S.phase='after'; S.fx=returners.length?'secure':'walk'; S.fxId++;
+        push();
+        var tok2=++DTOK;
+        setTimeout(function(){ if(tok2!==DTOK) return; if(inTemple().length===0) endRound(null); else nextCard(); },1250);
+      }catch(e2){ showErr('resolve2: '+e2.message); }
+    },1750);
+  }catch(e){ showErr('resolve: '+e.message); }
+}
+function endRound(hazardKey){
+  try{
+    var lost=inTemple(), lostGems=lost.reduce(function(a,p){ return a+p.carried; },0);
+    lost.forEach(function(p){ p.carried=0; p.inTemple=false; p.decision=null; p.lost=!!hazardKey; });
+    if(hazardKey) S.removed[hazardKey]=(S.removed[hazardKey]||0)+1;
+    S.relicsOnPath=0; S.phase='roundend';
+    S.fx=hazardKey?'collapse':'calm'; S.fxId++;
+    S.msg=hazardKey?('ถูกจับได้! '+hname(hazardKey)+'โผล่ซ้ำ — '+lost.length+' ตัวทำเมล็ดในแก้มหล่นหมด รวม '+lostGems+' เมล็ด')
+                   :('ทุกตัวกลับรังครบ — จบคืนที่ '+S.round);
+    push();
+    var tok=++DTOK;
+    setTimeout(function(){ if(tok!==DTOK) return; if(S.round>=S.maxRounds) endGame(); else startRound(); },hazardKey?3500:2600);
+  }catch(e){ showErr('endRound: '+e.message); }
+}
+function endGame(){ S.phase='gameover'; S.fx='victory'; S.fxId++; S.msg='จบการบุกครัว'; push(); }
+
+/* ---------- BOT AI (public info only) ---------- */
+function botDecide(p){
+  try{
+    var n=inTemple().length, deck=S.deck, dl=deck.length||1, danger=0, tsum=0;
+    for(var i=0;i<deck.length;i++){ var c=deck[i]; if(c.t==='h'){ if(S.seen[c.k]) danger++; } else if(c.t==='t') tsum+=c.v; }
+    var pBust=danger/dl;
+    if(pBust<=0) return 'go';
+    var avgGain=(tsum/dl)/Math.max(1,n);
+    var pathShare=pathShareFor(Math.max(1,Math.round(n/2)));
+    var relicBonus=(S.relicsOnPath>0&&n<=2)?4.5:(S.relicsOnPath>0?1.2:0);
+    var stopV=p.carried+pathShare+relicBonus, contV=(1-pBust)*(p.carried+avgGain*2.2);
+    var jitter=0.85+Math.random()*0.32;
+    if(stopV<=2.5&&pBust<0.45) return 'go';
+    return (contV*p.risk>stopV*jitter)?'go':'camp';
+  }catch(e){ return 'camp'; }
+}
+
+/* ---------- RENDERING ---------- */
+var panelMap={}, panelSig='', pathEls=[], pathRound=-1, lastFxId=-1, lastCardIdx=-1;
+function resetView(){ panelSig=''; lastFxId=-1; lastCardIdx=-1; pathRound=-1; }
+function showScreen(name){ ['menu','setup','online','game','end'].forEach(function(s){ var el=$('screen-'+s); if(el) el.classList.toggle('on',s===name); }); }
+function buildHazBar(){
+  var bar=$('hazBar'); bar.innerHTML='';
+  HAZARDS.forEach(function(h){
+    var d=mk('div','hz'); d.id='hz-'+h.k; d.title=h.n;
+    var hi=mk('div','hi'); hi.innerHTML=artHazard(h.k);
+    var tx=mk('div','hzt'); tx.appendChild(mk('span','hzn',h.n)); tx.appendChild(mk('span','hzc','ในกอง ×3'));
+    d.appendChild(hi); d.appendChild(tx); d.appendChild(mk('span','alert','!')); bar.appendChild(d);
+  });
+}
+function sigOf(V){ return V.players.map(function(p){ return p.id+(p.bot?'b':'h'); }).join(','); }
+function buildPanels(V){
+  var box=$('plist'); box.innerHTML=''; panelMap={};
+  $('crew').className='c'+V.players.length;
+  V.players.forEach(function(p,i){
+    var el=mk('div','pp'); el.style.setProperty('--pc',SEAT_COLORS[i%8]);
+    var av=mk('div','av'), nm=mk('div','nm'), n1=mk('div','n1'), n2=mk('div','n2'), pst=mk('span','pst'), sub=mk('span','sub');
+    n2.appendChild(pst); n2.appendChild(sub); nm.appendChild(n1); nm.appendChild(n2);
+    var sts=mk('div','sts');
+    function stat(cls,label){ var s=mk('div','st '+cls); s.appendChild(mk('i',null,label)); var b=mk('b',null,'0'); s.appendChild(b); sts.appendChild(s); return {box:s,val:b}; }
+    var c=stat('carry','แก้ม'), t=stat('tent','รัง'), r=stat('rel','ล้ำค่า');
+    el.appendChild(av); el.appendChild(nm); el.appendChild(sts); box.appendChild(el);
+    panelMap[p.id]={root:el,av:av,avKey:'',n1:n1,pst:pst,sub:sub,carry:c,tent:t,rel:r,pc:-1,pt:-1};
+  });
+  panelSig=sigOf(V);
+}
+function bumpEl(el){ el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); }
+function setStat(stat,val,prev){ stat.val.textContent=val; if(prev>=0&&prev!==val) bumpEl(stat.box); }
+function moodOf(p,V){
+  if(p.lost) return 'lost';
+  if(!p.inTemple) return V.phase==='gameover'?'ok':'happy';
+  if(V.fx==='bustcard'||(V.danger||0)>=25) return 'scared';
+  return 'ok';
+}
+function updatePanels(V){
+  V.players.forEach(function(p){
+    var m=panelMap[p.id]; if(!m) return;
+    m.n1.textContent=p.name;
+    var st,cls;
+    if(!p.conn){ st='หลุดการเชื่อมต่อ'; cls='lost'; }
+    else if(V.phase==='decide'&&p.inTemple){ if(p.locked){ st='ล็อกแล้ว ✓'; cls='locked'; } else { st='กำลังคิด'; cls='thinking'; } }
+    else if(p.inTemple){ st='ในครัว'; cls='in'; }
+    else if(p.lost){ st='ถูกจับได้!'; cls='lost'; }
+    else { st='พักในรัง'; cls='camp'; }
+    m.pst.textContent=st; m.pst.className='pst '+cls;
+    m.sub.textContent=(p.id===V.me)?'คุณ':(p.bot?('บอท · '+p.desc):'ผู้เล่น');
+    var cheek=Math.min(5,Math.ceil(p.carried/4))/5, mood=moodOf(p,V), key=cheek+'|'+mood;
+    if(m.avKey!==key){ m.av.innerHTML=avatarFor(p.idx,cheek,mood); m.avKey=key; }
+    setStat(m.carry,p.carried,m.pc); m.pc=p.carried;
+    setStat(m.tent,p.tent,m.pt); m.pt=p.tent;
+    m.rel.val.textContent=p.relics.length; m.rel.box.classList.toggle('has',p.relics.length>0);
+    var r=m.root;
+    r.classList.toggle('in',p.inTemple);
+    r.classList.toggle('out',!p.inTemple&&!p.lost);
+    r.classList.toggle('dead',!p.inTemple&&p.lost);
+    r.classList.toggle('me',p.id===V.me);
+    r.classList.toggle('off',!p.conn);
+  });
+}
+function miniEl(c){
+  var cls=c.t==='t'?'k-loot':(c.t==='r'?'k-relic':'k-haz');
+  var d=mk('div','mini '+cls), inner=mk('div','mi2');
+  inner.innerHTML=c.t==='t'?artLoot(c.v):(c.t==='r'?artRelic():artHazard(c.k));
+  d.appendChild(inner);
+  if(c.t==='t') d.appendChild(mk('span','ml',String(c.left||0)));
+  return d;
+}
+function renderPath(V){
+  var strip=$('pathStrip');
+  if(V.round!==pathRound||V.path.length<pathEls.length){ strip.innerHTML=''; pathEls=[]; pathRound=V.round; }
+  for(var i=pathEls.length;i<V.path.length;i++){ var el=miniEl(V.path[i]); strip.appendChild(el); pathEls.push(el); }
+  for(var j=0;j<V.path.length;j++){
+    var c=V.path[j], e=pathEls[j]; if(!e) continue;
+    if(c.t==='t'){ var lb=e.querySelector('.ml'); if(lb) lb.textContent=c.left||0; e.classList.toggle('empty',(c.left||0)===0); }
+    if(c.t==='r') e.classList.toggle('claimed',!!c.claimed);
+  }
+  strip.scrollLeft=strip.scrollWidth;
+}
+function renderHaz(V){
+  HAZARDS.forEach(function(h){
+    var el=$('hz-'+h.k); if(!el) return;
+    var left=3-(V.removed[h.k]||0);
+    el.classList.toggle('seen',!!V.seen[h.k]); el.classList.toggle('gone',left<=0);
+    el.querySelector('.hzc').textContent='ในกอง ×'+left;
+  });
+  var pct=V.danger||0, ang=-90+Math.min(1,pct/45)*180;
+  $('dangerPct').textContent=pct+'%';
+  $('needle').style.transform='rotate('+ang.toFixed(1)+'deg)';
+}
+function renderPips(V){
+  var box=$('roundPips');
+  if(box.children.length!==V.maxRounds){ box.innerHTML=''; for(var i=0;i<V.maxRounds;i++) box.appendChild(mk('i','moon')); }
+  for(var j=0;j<box.children.length;j++) box.children[j].className='moon'+(j+1<V.round?' done':(j+1===V.round?' cur':''));
+}
+function renderCard(V){
+  var big=$('bigCard'), stage=$('stage'), idx=V.path.length-1;
+  if(idx<0){
+    if(lastCardIdx!==-2-V.round){ big.innerHTML=backHTML(V.round); big.classList.remove('deal','bust'); void big.offsetWidth; big.classList.add('deal'); }
+    lastCardIdx=-2-V.round; stage.setAttribute('data-t','b'); return;
+  }
+  var c=V.path[idx];
+  stage.setAttribute('data-t',(V.fx==='bustcard'||V.fx==='collapse')?'bust':c.t);
+  if(idx!==lastCardIdx){
+    lastCardIdx=idx; big.innerHTML=cardHTML(c);
+    big.classList.remove('deal','bust'); void big.offsetWidth; big.classList.add(V.fx==='bustcard'?'bust':'deal');
+  }
+}
+function updateControls(V){
+  var be=$('btnExplore'), br=$('btnReturn'), canAct=false, note='', mine=null;
+  var me=V.me?V.players.filter(function(p){ return p.id===V.me; })[0]:null;
+  if(V.phase==='decide'){
+    if(MODE==='online'){
+      if(me&&me.inTemple&&!me.locked){ canAct=true; note='เลือกอย่างลับ ๆ — ไม่มีใครเห็นจนกว่าทุกตัวจะล็อก'; }
+      else if(me&&me.inTemple){ mine=me.myDecision; note='ล็อกแล้ว — รอสมาชิกตัวอื่น…'; }
+      else note='คุณพักอยู่ในรัง — รอคืนถัดไป';
+    } else {
+      var humans=V.players.filter(function(p){ return !p.bot&&p.inTemple; });
+      if(humans.length===1){
+        if(!humans[0].locked){ canAct=true; note='ถึงตาคุณแล้ว — บอทก็กำลังคิดอย่างลับ ๆ'; }
+        else { mine=humans[0].myDecision; note='ล็อกแล้ว — รอบอทตัดสินใจ…'; }
+      } else if(humans.length===0) note='คุณพักอยู่ในรัง — ดูบอทวัดใจกันต่อ…';
+      else note='ผลัดกันส่งเครื่องเพื่อตัดสินใจอย่างลับ ๆ';
+    }
+  } else if(V.phase==='reveal') note='กำลังเปิดการ์ดใบถัดไป…';
+  else if(V.phase==='dreveal') note='เปิดเผยพร้อมกัน!';
+  else if(V.phase==='after') note='ตัวที่เหลือย่องลึกเข้าไปในครัว…';
+  else if(V.phase==='roundstart') note='เข็มนาฬิกาชี้เที่ยงคืน… ได้เวลาบุก';
+  else if(V.phase==='roundend') note=V.round>=V.maxRounds?'กำลังนับเมล็ดในรัง…':'เตรียมตัวสำหรับคืนถัดไป…';
+  be.disabled=!canAct; br.disabled=!canAct;
+  be.classList.toggle('ready',canAct); br.classList.toggle('ready',canAct);
+  be.classList.toggle('chosen',mine==='go'); br.classList.toggle('chosen',mine==='camp');
+  $('exSub').textContent=mine==='go'?'✓ คุณเลือกทางนี้':'เสี่ยงเพื่อของกินที่มากกว่า';
+  $('rtSub').textContent=mine==='camp'?'✓ คุณเลือกทางนี้':'เก็บเมล็ดในแก้มเข้ารังอย่างปลอดภัย';
+  $('statusMsg').textContent=note;
+  var ms=$('mySum');
+  if(me){
+    ms.classList.remove('hide');
+    $('myCheek').textContent=me.carried; $('myNest').textContent=me.tent;
+    var ch=Math.min(5,Math.ceil(me.carried/4))/5, md=moodOf(me,V), k=ch+'|'+md+'|'+me.idx;
+    if(ms.getAttribute('data-k')!==k){ $('myAv').innerHTML=avatarFor(me.idx,ch,md); ms.setAttribute('data-k',k); }
+  } else ms.classList.add('hide');
+}
+var prevGems=-1, prevRel=-1;
+function applyView(V){
+  try{
+    VIEW=V;
+    if(V.phase==='lobby'){ renderLobby(V); return; }
+    if(MODE==='online'&&!isHost) Snd.setTension((V.danger||0)/100*2.2);
+    if(V.phase==='gameover'){ renderResults(V); doFx(V); return; }
+    if(!$('screen-game').classList.contains('on')) showScreen('game');
+    if(sigOf(V)!==panelSig) buildPanels(V);
+    $('roundLabel').textContent=V.round+'/'+V.maxRounds;
+    $('deckLeft').textContent=V.deckLeft;
+    $('pathGems').textContent=V.pathGems; if(prevGems>=0&&prevGems!==V.pathGems) bumpEl($('tGems')); prevGems=V.pathGems;
+    $('pathRelics').textContent=V.relicsOnPath; if(prevRel>=0&&prevRel!==V.relicsOnPath) bumpEl($('tRel')); prevRel=V.relicsOnPath;
+    $('inTempleCount').textContent=V.players.filter(function(p){ return p.inTemple; }).length+' / '+V.players.length;
+    $('stageMsg').textContent=V.msg||'';
+    if(V.room){ $('roomChip').style.display=''; $('roomBadge').textContent=V.room; } else $('roomChip').style.display='none';
+    renderPips(V); renderHaz(V); renderCard(V); renderPath(V); updatePanels(V); updateControls(V);
+    doFx(V);
+  }catch(e){ showErr('render: '+e.message); }
+}
+
+/* ---------- FX ---------- */
+var bannerT=null, decT1=null, decT2=null;
+function banner(text,bad){
+  var b=$('banner'); b.querySelector('span').textContent=text;
+  b.classList.toggle('bad',!!bad); b.classList.remove('on'); void b.offsetWidth; b.classList.add('on');
+  clearTimeout(bannerT); bannerT=setTimeout(function(){ b.classList.remove('on'); },2400);
+}
+function burstSeeds(){
+  var r=$('bigCard').getBoundingClientRect(), cx=r.left+r.width/2, cy=r.top+r.height/2, L=$('fxLayer');
+  for(var i=0;i<28;i++){
+    var e=mk('div','seedfx'); e.innerHTML=seedIco();
+    var a=Math.random()*Math.PI*2, d=120+Math.random()*260;
+    e.style.left=cx+'px'; e.style.top=cy+'px';
+    e.style.setProperty('--dx',(Math.cos(a)*d).toFixed(0)+'px');
+    e.style.setProperty('--dy',(Math.sin(a)*d+120).toFixed(0)+'px');
+    e.style.setProperty('--rr',(Math.random()*720-360).toFixed(0)+'deg');
+    L.appendChild(e);
+    (function(n){ setTimeout(function(){ if(n.parentNode) n.parentNode.removeChild(n); },1300); })(e);
+  }
+  var f=mk('div','flash'); document.body.appendChild(f);
+  setTimeout(function(){ if(f.parentNode) f.parentNode.removeChild(f); },800);
+  document.body.classList.add('shake'); setTimeout(function(){ document.body.classList.remove('shake'); },1400);
+}
+function confetti(){
+  var L=$('fxLayer'), cols=['#ffc845','#43d1a7','#ff7b93','#7cc6ff','#a38cff','#fff6e6'];
+  for(var i=0;i<46;i++){
+    (function(i){ setTimeout(function(){
+      var c=mk('div','conf'); c.style.left=(Math.random()*100)+'%'; c.style.background=cols[i%cols.length];
+      c.style.animation='fall '+(1.8+Math.random()*1.6)+'s linear forwards'; L.appendChild(c);
+      setTimeout(function(){ if(c.parentNode) c.parentNode.removeChild(c); },3600);
+    },i*40); })(i);
+  }
+}
+function goldPops(){
+  try{
+    VIEW.players.forEach(function(p){
+      var m=panelMap[p.id];
+      if(m&&p.gain>0&&!p.inTemple){
+        var rect=m.root.getBoundingClientRect(), d=mk('div','goldPop','+'+p.gain+' เมล็ด');
+        d.style.left=(rect.left+rect.width*0.4)+'px'; d.style.top=(rect.top+4)+'px';
+        document.body.appendChild(d); setTimeout(function(){ if(d.parentNode) d.parentNode.removeChild(d); },1300);
+      }
+    });
+  }catch(e){}
+}
+function showDecisions(V){
+  var ov=$('ovDecisions'), grid=$('decGrid'), items=[];
+  grid.innerHTML=''; $('decTitle').textContent='ทุกตัวล็อกแล้ว…';
+  (V.lastDecisions||[]).forEach(function(d){
+    var w=mk('div','dflip'), inn=mk('div','dinner'), camp=d.d==='camp';
+    var bk=mk('div','dface dback'); bk.appendChild(mk('div','dq','?')); bk.appendChild(mk('div','dn',d.name));
+    var fr=mk('div','dface dfront '+(camp?'camp':'go')), av=mk('div','dav'); av.innerHTML=avatarFor(d.idx,camp?0.2:0.8,camp?'happy':'ok');
+    fr.appendChild(av); fr.appendChild(mk('div','dn',d.name)); fr.appendChild(mk('div','dd',camp?'กลับรัง':'ตะลุยต่อ'));
+    inn.appendChild(bk); inn.appendChild(fr); w.appendChild(inn); grid.appendChild(w); items.push(w);
+  });
+  ov.classList.add('on');
+  clearTimeout(decT1); clearTimeout(decT2);
+  decT1=setTimeout(function(){ items.forEach(function(w){ w.classList.add('show'); }); $('decTitle').textContent='เปิดเผยพร้อมกัน!'; Snd.play('reveal'); },480);
+  decT2=setTimeout(function(){ ov.classList.remove('on'); },1700);
+}
+function doFx(V){
+  if(V.fxId===lastFxId) return;
+  lastFxId=V.fxId;
+  switch(V.fx){
+    case 'newround': banner('คืนที่ '+V.round); Snd.play('creak'); Snd.play('scurry'); break;
+    case 'card':
+      Snd.play('card');
+      var last=V.path[V.path.length-1];
+      if(last) setTimeout(function(){ if(last.t==='t') Snd.play('seed'); else if(last.t==='r') Snd.play('relic'); else if(last.k==='cat') Snd.play('meow'); else Snd.play('warn'); },200);
+      break;
+    case 'bustcard': Snd.play('card'); setTimeout(function(){ Snd.play('warn'); },150); break;
+    case 'dec': showDecisions(V); break;
+    case 'secure': Snd.play('safe'); goldPops(); break;
+    case 'walk': Snd.play('scurry'); break;
+    case 'collapse': burstSeeds(); Snd.play('collapse'); banner('ถูกจับได้!',true); break;
+    case 'calm': banner('กลับรังครบทุกตัว'); Snd.play('safe'); break;
+    case 'victory': Snd.play('victory'); confetti(); break;
+  }
+}
+
+/* ---------- PASS-AND-PLAY ---------- */
+var passQueue=[];
+function runPassFlow(humans){ passQueue=humans.map(function(p){ return p.id; }); nextPass(); }
+function nextPass(){
+  if(S.phase!=='decide'||!passQueue.length){ $('ovPass').classList.remove('on'); passQueue=[]; return; }
+  var pid=passQueue[0], p=null;
+  for(var i=0;i<S.players.length;i++) if(S.players[i].id===pid) p=S.players[i];
+  if(!p||!p.inTemple||p.decision){ passQueue.shift(); nextPass(); return; }
+  $('passAv').innerHTML=avatarFor(S.players.indexOf(p),Math.min(5,Math.ceil(p.carried/4))/5,'ok');
+  $('passName').textContent=p.name; $('passName2').textContent=p.name;
+  $('passInfo').textContent='ในแก้ม '+p.carried+' · ในรัง '+p.tent+' · หล่นบนทาง '+totalPathGems()+' เมล็ด';
+  $('passStep1').style.display='flex'; $('passStep2').style.display='none';
+  $('ovPass').classList.add('on');
+}
+$('passReady').onclick=guard(function(){ $('passStep1').style.display='none'; $('passStep2').style.display='flex'; });
+function passPick(d){ var pid=passQueue.shift(); $('ovPass').classList.remove('on'); submitDecision(pid,d); setTimeout(nextPass,280); }
+$('passGo').onclick=guard(function(){ passPick('go'); });
+$('passCamp').onclick=guard(function(){ passPick('camp'); });
+
+/* ---------- ONLINE P2P (PeerJS public broker; no own server) ---------- */
+var peer=null, conns={}, hostConn=null, reconTimer=null, myName='', joinCode='', joinStopped=false;
+var ALPHA='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+function genCode(){ var s=''; for(var i=0;i<5;i++) s+=ALPHA[Math.floor(Math.random()*ALPHA.length)]; return s; }
+function peerId(code){ return 'cheekyheist-v1-'+code; }
+function peerAvailable(){ return !window.PEER_FAIL&&typeof window.Peer==='function'; }
+function onMsg(txt,good){ var m=$('onMsg'); m.textContent=txt||''; m.style.color=good?'#157a5e':'#d0304d'; }
+function setNet(ok){ var d=$('netDot'); if(d) d.classList.toggle('bad',!ok); }
+function save(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+function load(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function isNetErr(ty){ return ty==='network'||ty==='server-error'||ty==='socket-error'||ty==='socket-closed'||ty==='disconnected'; }
+function createRoom(name){
+  if(!peerAvailable()){ onMsg('โหลดระบบเชื่อมต่อออนไลน์ไม่สำเร็จ กรุณาตรวจสอบอินเทอร์เน็ต'); return; }
+  leaveNetwork();
+  MODE='online'; isHost=true; myName=name;
+  S=newState(); S.room=genCode(); PIDN=0; resetView();
+  var host=newPlayer(name,false); S.players.push(host); myPid=host.id;
+  onMsg('กำลังสร้างห้อง…',true); openHostPeer();
+}
+function openHostPeer(){
+  peer=new Peer(peerId(S.room),{debug:0});
+  peer.on('open',guard(function(){ onMsg(''); setNet(true); save('ch_room',S.room); save('ch_name',myName); if(S.phase==='lobby') showLobby(); push(); }));
+  peer.on('error',guard(function(err){
+    var ty=(err&&err.type)||String(err);
+    if(ty==='unavailable-id'&&S.phase==='lobby'){ try{ peer.destroy(); }catch(e){} S.room=genCode(); openHostPeer(); return; }
+    if(ty==='peer-unavailable') return;
+    if(isNetErr(ty)){ setNet(false); return; }
+    onMsg('ข้อผิดพลาดการเชื่อมต่อ: '+ty);
+  }));
+  peer.on('disconnected',function(){ setNet(false); setTimeout(function(){ try{ if(peer&&!peer.destroyed) peer.reconnect(); }catch(e){} },1500); });
+  peer.on('connection',guard(function(c){
+    c.on('data',function(d){ onHostData(c,d); });
+    c.on('close',function(){ hostLostConn(c); });
+    c.on('error',function(){ hostLostConn(c); });
+  }));
+}
+function hostLostConn(c){
+  try{
+    if(!c.__pid||conns[c.__pid]!==c) return;
+    delete conns[c.__pid];
+    var p=S.players.filter(function(x){ return x.id===c.__pid; })[0];
+    if(p&&!p.bot){ p.conn=false; p.dcAt=Date.now(); }
+    push();
+  }catch(e){}
+}
+function onHostData(c,d){
+  try{
+    if(!d||!d.t) return;
+    if(d.t==='join'){
+      var nm=String(d.name||'แฮมสเตอร์').trim().slice(0,12)||'แฮมสเตอร์';
+      var ex=S.players.filter(function(p){ return !p.bot&&p.name.toLowerCase()===nm.toLowerCase(); })[0];
+      if(ex){
+        if(ex.id===myPid){ c.send({t:'err',m:'ชื่อนี้ซ้ำกับหัวหน้าห้อง กรุณาใช้ชื่ออื่น'}); return; }
+        var old=conns[ex.id];
+        if(S.phase==='lobby'&&old&&old.open&&old!==c){ c.send({t:'err',m:'ชื่อนี้มีคนใช้ในห้องแล้ว'}); return; }
+        if(old&&old!==c){ try{ old.close(); }catch(e){} }
+        ex.conn=true; ex.dcAt=0; c.__pid=ex.id;
+      } else {
+        if(S.phase!=='lobby'){ c.send({t:'err',m:'เกมเริ่มไปแล้ว — ใช้ชื่อเดิมเพื่อกลับเข้าที่นั่ง'}); return; }
+        if(S.players.length>=8){ c.send({t:'err',m:'ห้องเต็มแล้ว (8 ตัว)'}); return; }
+        var np=newPlayer(nm,false); S.players.push(np); c.__pid=np.id;
+      }
+      conns[c.__pid]=c;
+      c.send({t:'welcome',pid:c.__pid,room:S.room});
+      push();
+    } else if(d.t==='decide'){
+      if(c.__pid&&conns[c.__pid]===c) submitDecision(c.__pid,d.d);
+    } else if(d.t==='bye') hostLostConn(c);
+  }catch(e){ showErr('host msg: '+e.message); }
+}
+function joinRoom(code,name){
+  if(!peerAvailable()){ onMsg('โหลดระบบเชื่อมต่อออนไลน์ไม่สำเร็จ กรุณาตรวจสอบอินเทอร์เน็ต'); return; }
+  leaveNetwork();
+  MODE='online'; isHost=false; myName=name; joinCode=code; joinStopped=false; myPid=null;
+  S=newState(); S.room=code; resetView();
+  onMsg('กำลังเชื่อมต่อห้อง '+code+'…',true);
+  save('ch_room',code); save('ch_name',name);
+  peer=new Peer({debug:0});
+  peer.on('open',guard(function(){ clientConnect(); }));
+  peer.on('error',guard(function(err){
+    var ty=(err&&err.type)||'';
+    if(ty==='peer-unavailable'){ onMsg('ยังไม่พบห้องนี้ — กำลังลองใหม่…'); setNet(false); scheduleRecon(); }
+    else if(isNetErr(ty)){ setNet(false); scheduleRecon(); }
+    else onMsg('ข้อผิดพลาด: '+ty);
+  }));
+  peer.on('disconnected',function(){ setNet(false); setTimeout(function(){ try{ if(peer&&!peer.destroyed) peer.reconnect(); }catch(e){} },1500); });
+}
+function clientConnect(){
+  try{
+    if(joinStopped||!peer||peer.destroyed||peer.disconnected) return;
+    if(hostConn&&hostConn.open) return;
+    var c=peer.connect(peerId(joinCode),{reliable:true});
+    hostConn=c;
+    c.on('open',guard(function(){
+      if(c!==hostConn) return;
+      setNet(true); onMsg('เชื่อมต่อสำเร็จ',true);
+      c.send({t:'join',name:myName});
+      if(reconTimer){ clearInterval(reconTimer); reconTimer=null; }
+    }));
+    c.on('data',guard(function(d){ if(c===hostConn) onClientData(d); }));
+    c.on('close',guard(function(){ if(c!==hostConn) return; setNet(false); onMsg('หลุดการเชื่อมต่อ — กำลังเชื่อมต่อใหม่…'); scheduleRecon(); }));
+    c.on('error',guard(function(){ if(c===hostConn) scheduleRecon(); }));
+  }catch(e){ showErr('connect: '+e.message); }
+}
+function scheduleRecon(){ if(reconTimer||joinStopped) return; reconTimer=setInterval(function(){ try{ clientConnect(); }catch(e){} },3500); }
+function onClientData(d){
+  try{
+    if(!d||!d.t) return;
+    if(d.t==='welcome'){ myPid=d.pid; S.room=d.room; onMsg(''); }
+    else if(d.t==='state') applyView(d.s);
+    else if(d.t==='err'){
+      onMsg(d.m); joinStopped=true;
+      if(reconTimer){ clearInterval(reconTimer); reconTimer=null; }
+      showScreen('online'); $('onlHome').style.display='block'; $('onlLobby').style.display='none';
+    }
+  }catch(e){ showErr('client msg: '+e.message); }
+}
+function sendDecision(d){
+  if(isHost){ submitDecision(myPid,d); return; }
+  if(hostConn&&hostConn.open){ try{ hostConn.send({t:'decide',d:d}); }catch(e){} }
+  else $('statusMsg').textContent='ยังไม่ได้เชื่อมต่อหัวหน้าห้อง — กำลังเชื่อมต่อใหม่…';
+}
+function leaveNetwork(){
+  joinStopped=true;
+  try{ if(hostConn&&hostConn.open) hostConn.send({t:'bye'}); }catch(e){}
+  try{ if(peer) peer.destroy(); }catch(e){}
+  peer=null; hostConn=null; conns={};
+  if(reconTimer){ clearInterval(reconTimer); reconTimer=null; }
+}
+
+/* ---------- LOBBY ---------- */
+function showLobby(){
+  showScreen('online');
+  $('onlHome').style.display='none'; $('onlLobby').style.display='block';
+  $('hostOnly').style.display=isHost?'block':'none';
+  $('guestWait').style.display=isHost?'none':'block';
+  $('lobbyCode').textContent=S?S.room:'-----';
+}
+function seatRow(idx,name,tag,tagColor){
+  var d=mk('div','seat'), av=mk('div','sav'); av.style.setProperty('--pc',SEAT_COLORS[idx%8]); av.innerHTML=avatarFor(idx,0.3,'ok');
+  d.appendChild(av); d.appendChild(mk('div','nmL',name));
+  var t=mk('div','tagL',tag); if(tagColor) t.style.color=tagColor; d.appendChild(t);
+  return d;
+}
+function renderLobby(V){
+  showLobby();
+  $('lobbyCode').textContent=V.room||'-----';
+  $('lobbyCount').textContent=V.players.length;
+  var list=$('lobbyList'); list.innerHTML='';
+  V.players.forEach(function(p,i){
+    list.appendChild(seatRow(i,p.name+(p.id===V.me?' (คุณ)':''),p.bot?('บอท · '+p.desc):(p.conn?(i===0?'หัวหน้าห้อง':'พร้อม'):'หลุด'),p.bot?'#5b4bc4':(p.conn?'#157a5e':'#d0304d')));
+  });
+  $('btnStartOnline').disabled=V.players.length<3;
+}
+
+/* ---------- LOCAL SETUP ---------- */
+var seatCfg=[];
+function initSeats(n,solo){
+  seatCfg=[];
+  for(var i=0;i<n;i++){ var bot=solo?(i>0):(i>1), bp=BOT_POOL[i%8]; seatCfg.push({name:bot?bp.n:('แฮมสเตอร์ '+(i+1)),bot:bot,risk:bp.risk,desc:bp.d}); }
+  renderSeats();
+}
+function renderSeats(){
+  var box=$('seatList'); box.innerHTML='';
+  seatCfg.forEach(function(s,i){
+    var d=mk('div','seat'), av=mk('div','sav'); av.style.setProperty('--pc',SEAT_COLORS[i%8]); av.innerHTML=avatarFor(i,0.3,'ok');
+    var inp=document.createElement('input'); inp.value=s.name; inp.maxLength=12;
+    inp.oninput=function(){ seatCfg[i].name=inp.value.slice(0,12); };
+    var tog=mk('button','tog'+(s.bot?' bot':''),s.bot?('บอท · '+s.desc):'ผู้เล่น');
+    tog.onclick=guard(function(){
+      var bp=BOT_POOL[i%8]; seatCfg[i].bot=!seatCfg[i].bot;
+      seatCfg[i].name=seatCfg[i].bot?bp.n:('แฮมสเตอร์ '+(i+1)); seatCfg[i].risk=bp.risk; seatCfg[i].desc=bp.d; renderSeats();
+    });
+    d.appendChild(av); d.appendChild(inp); d.appendChild(tog); box.appendChild(d);
+  });
+  $('pCount').textContent=seatCfg.length;
+}
+
+/* ---------- RESULTS ---------- */
+function renderResults(V){
+  showScreen('end');
+  var rows=V.players.map(function(p){
+    var rv=p.relics.reduce(function(a,b){ return a+b; },0);
+    return {idx:p.idx,name:p.name,bot:p.bot,gems:p.tent,rel:p.relics.length,relv:rv,total:p.tent+rv};
+  }).sort(function(a,b){ return b.total-a.total||b.rel-a.rel; });
+  var top=rows[0], winners=rows.filter(function(r){ return top&&r.total===top.total&&r.rel===top.rel; });
+  $('winnerLine').textContent=!top?'—':(winners.length>1?('เสมอกัน! '+winners.map(function(w){ return w.name; }).join(' และ ')+' · '+top.total+' เมล็ด')
+    :('🏆 '+top.name+' คือราชาแก้มตุ่ย! ('+top.total+' เมล็ด)'));
+  var pod=$('podium'); pod.innerHTML='';
+  [1,0,2].forEach(function(rank){
+    var r=rows[rank], el=mk('div','pod p'+(rank+1)+(r?'':' empty'));
+    if(r){
+      var av=mk('div','pav'); av.innerHTML=avatarFor(r.idx,rank===0?1:0.5,'happy',rank===0);
+      el.appendChild(av); el.appendChild(mk('div','pn',r.name)); el.appendChild(mk('div','pt',r.total+' เมล็ด'));
+    }
+    el.appendChild(mk('div','blk',String(rank+1)));
+    pod.appendChild(el);
+  });
+  var tb=$('resBody'); tb.innerHTML='';
+  rows.forEach(function(r,i){
+    var tr=document.createElement('tr'); if(winners.indexOf(r)>=0) tr.className='win';
+    tr.appendChild(mk('td','nm',(i+1)+'. '+r.name+(r.bot?' (บอท)':'')));
+    tr.appendChild(mk('td',null,String(r.gems)));
+    tr.appendChild(mk('td',null,r.rel?(r.rel+' ชิ้น (+'+r.relv+')'):'—'));
+    var tt=mk('td'); tt.appendChild(mk('b',null,String(r.total))); tr.appendChild(tt);
+    tb.appendChild(tr);
+  });
+}
+
+/* ---------- EVENTS ---------- */
+function copyText(t){
+  try{ if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(t); return; } }catch(e){}
+  try{ var ta=document.createElement('textarea'); ta.value=t; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); }catch(e){}
+}
+function inviteLink(){ return location.origin+location.pathname+'?room='+(S?S.room:''); }
+function syncAudioUI(){
+  $('swMusic').classList.toggle('on',Snd.music); $('swSfx').classList.toggle('on',Snd.sfx);
+  $('btnMusic').classList.toggle('off',!Snd.music); $('btnSfx').classList.toggle('off',!Snd.sfx); $('btnSfx').textContent=Snd.sfx?'🔊':'🔇';
+}
+function toggleMusic(){ Snd.init(); Snd.music=!Snd.music; if(Snd.music) Snd.startMusic(); else Snd.stopMusic(); syncAudioUI(); }
+function toggleSfx(){ Snd.init(); Snd.sfx=!Snd.sfx; if(Snd.sfx) Snd.play('tick'); syncAudioUI(); }
+var quitArm=false, quitT=null;
+function openSettings(){
+  quitArm=false; $('setQuit').textContent='ออกจากเกม';
+  $('setQuit').style.display=$('screen-game').classList.contains('on')?'':'none';
+  syncAudioUI(); $('ovSettings').classList.add('on');
+}
+function goMenu(){ DTOK++; $('ovPass').classList.remove('on'); $('ovSettings').classList.remove('on'); leaveNetwork(); MODE='local'; showScreen('menu'); }
+
+$('mSolo').onclick=guard(function(){ unlockAudio(); MODE='local'; isHost=true; initSeats(4,true); $('setupTitle').textContent='เล่นคนเดียวกับบอท'; showScreen('setup'); });
+$('mLocal').onclick=guard(function(){ unlockAudio(); MODE='local'; isHost=true; initSeats(4,false); $('setupTitle').textContent='เล่นเครื่องเดียวกัน'; showScreen('setup'); });
+$('mOnline').onclick=guard(function(){
+  unlockAudio(); showScreen('online'); $('onlHome').style.display='block'; $('onlLobby').style.display='none';
+  var sv=load('ch_name'); if(sv) $('onName').value=sv;
+  var q=new URLSearchParams(location.search).get('room');
+  if(q) $('onCode').value=String(q).toUpperCase().slice(0,5); else { var sr=load('ch_room'); if(sr) $('onCode').value=sr; }
+  if(!peerAvailable()) onMsg('คำเตือน: โหลดไลบรารีเชื่อมต่อไม่สำเร็จ โหมดออนไลน์อาจใช้ไม่ได้'); else onMsg('');
+});
+$('mRules').onclick=guard(function(){ $('ovRules').classList.add('on'); });
+$('mSettings').onclick=guard(function(){ unlockAudio(); openSettings(); });
+$('closeRules').onclick=guard(function(){ $('ovRules').classList.remove('on'); });
+$('btnGear').onclick=guard(openSettings);
+$('closeSettings').onclick=guard(function(){ $('ovSettings').classList.remove('on'); });
+$('setRules').onclick=guard(function(){ $('ovRules').classList.add('on'); });
+$('setQuit').onclick=guard(function(){
+  if(!quitArm){ quitArm=true; $('setQuit').textContent='แตะอีกครั้งเพื่อยืนยัน'; clearTimeout(quitT); quitT=setTimeout(function(){ quitArm=false; $('setQuit').textContent='ออกจากเกม'; },3000); return; }
+  goMenu();
+});
+$('swMusic').onclick=guard(toggleMusic); $('btnMusic').onclick=guard(toggleMusic);
+$('swSfx').onclick=guard(toggleSfx); $('btnSfx').onclick=guard(toggleSfx);
+$('backMenu1').onclick=guard(function(){ showScreen('menu'); });
+$('backMenu2').onclick=guard(function(){ leaveNetwork(); MODE='local'; showScreen('menu'); });
+$('pMinus').onclick=guard(function(){ if(seatCfg.length>3){ seatCfg.pop(); renderSeats(); } });
+$('pPlus').onclick=guard(function(){ if(seatCfg.length<8){ var bp=BOT_POOL[seatCfg.length%8]; seatCfg.push({name:bp.n,bot:true,risk:bp.risk,desc:bp.d}); renderSeats(); } });
+$('startLocal').onclick=guard(function(){
+  unlockAudio();
+  if(seatCfg.length<3){ showErr('ต้องมีสมาชิกอย่างน้อย 3 ตัว'); return; }
+  leaveNetwork(); MODE='local'; isHost=true; myPid=null;
+  S=newState(); PIDN=0;
+  seatCfg.forEach(function(s){ S.players.push(newPlayer((s.name||'แฮมสเตอร์').slice(0,12),s.bot,s.risk,s.desc)); });
+  showScreen('game'); startGame(parseInt($('selRounds').value,10)||5);
+});
+$('btnCreate').onclick=guard(function(){ unlockAudio(); var n=($('onName').value||'').trim().slice(0,12); if(!n){ onMsg('กรุณาใส่ชื่อของคุณ'); return; } createRoom(n); });
+$('btnJoin').onclick=guard(function(){
+  unlockAudio();
+  var n=($('onName').value||'').trim().slice(0,12), c=($('onCode').value||'').trim().toUpperCase();
+  if(!n){ onMsg('กรุณาใส่ชื่อของคุณ'); return; }
+  if(c.length!==5){ onMsg('รหัสห้องต้องมี 5 ตัวอักษร'); return; }
+  joinRoom(c,n);
+});
+$('btnCopyCode').onclick=guard(function(){ copyText(S?S.room:''); $('lobbyMsg').textContent='คัดลอกรหัสห้องแล้ว'; });
+$('btnCopyLink').onclick=guard(function(){ copyText(inviteLink()); $('lobbyMsg').textContent='คัดลอกลิงก์เชิญแล้ว'; });
+$('roomChip').onclick=guard(function(){ copyText(inviteLink()); banner('คัดลอกลิงก์เชิญแล้ว'); });
+$('btnAddBot').onclick=guard(function(){
+  if(!isHost||!S||S.phase!=='lobby'||S.players.length>=8) return;
+  var used=S.players.filter(function(p){ return p.bot; }).length, bp=BOT_POOL[used%8];
+  S.players.push(newPlayer(bp.n,true,bp.risk,bp.d)); push();
+});
+$('btnDelBot').onclick=guard(function(){
+  if(!isHost||!S||S.phase!=='lobby') return;
+  for(var i=S.players.length-1;i>=0;i--){ if(S.players[i].bot){ S.players.splice(i,1); break; } }
+  push();
+});
+$('btnStartOnline').onclick=guard(function(){
+  if(!isHost||!S) return;
+  if(S.players.length<3){ $('lobbyMsg').textContent='ต้องมีอย่างน้อย 3 ตัว (เพิ่มบอทได้)'; return; }
+  unlockAudio(); showScreen('game'); startGame(parseInt($('selRounds2').value,10)||5);
+});
+$('btnLeaveRoom').onclick=guard(function(){ leaveNetwork(); MODE='local'; showScreen('menu'); });
+function humanPick(d){
+  unlockAudio();
+  if(MODE==='online'){ sendDecision(d); return; }
+  var h=inTemple().filter(function(p){ return !p.bot; });
+  if(h.length===1) submitDecision(h[0].id,d);
+}
+$('btnExplore').onclick=guard(function(){ humanPick('go'); });
+$('btnReturn').onclick=guard(function(){ humanPick('camp'); });
+$('btnAgain').onclick=guard(function(){
+  if(MODE==='online'&&!isHost){ banner('รอหัวหน้าห้องเริ่มเกมใหม่'); return; }
+  showScreen('game'); startGame(S.maxRounds);
+});
+$('btnEndMenu').onclick=guard(goMenu);
+
+/* share link auto-fill */
+(function(){
+  try{
+    var q=new URLSearchParams(location.search).get('room');
+    if(q){
+      showScreen('online'); $('onlHome').style.display='block'; $('onlLobby').style.display='none';
+      $('onCode').value=String(q).toUpperCase().slice(0,5);
+      var sv=load('ch_name'); if(sv) $('onName').value=sv;
+      onMsg('พบรหัสห้องจากลิงก์เชิญ — ใส่ชื่อแล้วกดเข้าร่วม',true);
+    }
+  }catch(e){}
+})();
+
+/* init + self-check */
+(function(){
+  try{
+    var need=['screen-menu','screen-setup','screen-online','screen-game','screen-end','hazBar','bigCard','pathStrip','crew','plist','needle','dangerPct',
+      'btnExplore','btnReturn','stageMsg','statusMsg','roundLabel','roundPips','deckLeft','pathGems','pathRelics','exSub','rtSub','mySum','myAv','podium','resBody','ovSettings','swMusic','swSfx'];
+    for(var i=0;i<need.length;i++) if(!$(need[i])) throw new Error('ไม่พบองค์ประกอบ: '+need[i]);
+    if(TREASURES.length!==15) throw new Error('จำนวนการ์ดของกินไม่ถูกต้อง');
+    if(HAZARDS.length!==5) throw new Error('จำนวนชนิดอันตรายไม่ถูกต้อง');
+    buildHazBar();
+    $('heroHam').innerHTML=hamsterSVG(FUR[0],1,5,'ok');
+    $('brandAv').innerHTML=hamsterSVG(FUR[0],0.6,5,'ok');
+    $('icoSeed').innerHTML=seedIco(); $('icoRing').innerHTML=ringIco(); $('icoHam').innerHTML=hamsterSVG(FUR[3],0.3,0,'ok');
+    syncAudioUI();
+  }catch(e){ showErr('ตรวจสอบระบบ: '+e.message); }
+})();
+</script>
+</body>
+</html>
